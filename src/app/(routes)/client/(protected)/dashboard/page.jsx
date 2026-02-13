@@ -1,0 +1,51 @@
+import Link from "next/link";
+
+export default function clientDashboardPage() {
+  const features = [
+    {
+      title: "All Jobs",
+      desc: "A place to view all your jobs!",
+      href: "/client/jobs",
+    },
+    {
+      title: "Create New Job",
+      desc: "Post a job for freelancers to find!",
+      href: "/client/jobs/new",
+    },
+    {
+      title: "Inbox",
+      desc: "Manage your messages!",
+      href: "/",
+    },
+    {
+      title: "Freelancers",
+      desc: "Browse all freelancers & find the perfect fit for your job!",
+      href: "/freelancer",
+    },
+    {
+      title: "Jobs In Progress",
+      desc: "View all your current ongoing Jobs!",
+      href: "/client/jobs/inprogress",
+    },
+  ];
+
+  return (
+    <>
+      <h1 className="tracker-title">Client Portal</h1>
+      <div className="main-features-container">
+        <section className="features-grid">
+          {features.map((feature) => (
+            <Link
+              key={feature.title}
+              href={feature.href}
+              className="feature-card"
+            >
+              <h3 className="feature-title">{feature.title}</h3>
+              <p className="feature-desc">{feature.desc}</p>
+            </Link>
+          ))}
+        </section>
+      </div>
+    </>
+  );
+}
