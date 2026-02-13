@@ -17,6 +17,7 @@ export default function Header() {
             </SignInButton>
           </SignedOut>
           <SignedIn>
+            <Link href="/client/dashboard">Portal</Link>
             <UserButton />
           </SignedIn>
         </div>
