@@ -23,16 +23,17 @@ export default function ContactForm() {
 
   return (
     <div>
-      <form className="form" action={handleFormSubmit}>
+      <form className="form feature-card" action={handleFormSubmit}>
         <label className="form-email" htmlFor="email">
           Email:{" "}
         </label>
-        <input id="form-email" type="text" name="email" />
+        <input className='bg-yellow-50' id="form-email" type="text" name="email" />
 
         <label className="form-content" htmlFor="content">
           Content:{" "}
         </label>
         <textarea
+          className='' 
           id="form-content"
           type="text"
           name="content"

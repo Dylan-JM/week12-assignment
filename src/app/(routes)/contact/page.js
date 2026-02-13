@@ -4,9 +4,9 @@ import "./contact.css";
 export default function Contact() {
   return (
     <>
-      <section className="">
-        <h1 className="">Contact Us</h1>
-        <p className="">
+      <section className="contact feature-card-container">
+        <h2 className="text-xl">Contact Us</h2>
+        <p className="feature-card">
           Contact us here. Please give us your purpose and details and we will
           get back to you soon. Alternatvely please use our chat messenging
           service.
