@@ -31,7 +31,7 @@ export default function clientDashboardPage() {
 
   return (
     <>
-      <h1 className="tracker-title">Portal</h1>
+      <h1 className="tracker-title">Client Portal</h1>
       <div className="main-features-container">
         <section className="features-grid">
           {features.map((feature) => (
