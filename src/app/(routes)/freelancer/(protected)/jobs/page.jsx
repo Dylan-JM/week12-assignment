@@ -9,7 +9,6 @@ export default async function FreelancerJobsPage() {
     throw new Error("Unauthenticated");
   }
 
-  // 1️⃣ Get freelancer
   const { rows: freelancers } = await db.query(
     `SELECT id FROM fm_freelancers WHERE clerk_id = $1`,
     [userId],
@@ -21,7 +20,6 @@ export default async function FreelancerJobsPage() {
 
   const freelancerId = freelancers[0].id;
 
-  // 2️⃣ Get contract job IDs
   const { rows: contracts } = await db.query(
     `SELECT job_id FROM fm_contracts WHERE freelancer_id = $1`,
     [freelancerId],
@@ -33,7 +31,6 @@ export default async function FreelancerJobsPage() {
 
   const jobIds = contracts.map((c) => c.job_id);
 
-  // 3️⃣ Fetch all jobs using ANY (Postgres UUID array)
   const { rows: jobs } = await db.query(
     `SELECT * FROM fm_jobs WHERE id = ANY($1)`,
     [jobIds],
