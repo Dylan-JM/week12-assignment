@@ -1,6 +1,6 @@
 import './about.css'
 
-export default function About(){
+export default function AboutPage(){
 	return(
 		<>
 			{/* <Header /> */}

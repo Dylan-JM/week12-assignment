@@ -3,14 +3,14 @@ import Link from "next/link";
 export default function clientDashboardPage() {
   const features = [
     {
-      title: "Active Jobs",
-      desc: "A place to view all your active jobs!",
-      href: "/freelancer/jobs",
+      title: "All Jobs",
+      desc: "A place to view all your jobs!",
+      href: "/client/jobs",
     },
     {
-      title: "Analytics",
-      desc: "Find reports & insights about your jobs!",
-      href: "/freelancer/analytics",
+      title: "Create New Job",
+      desc: "Post a job for freelancers to find!",
+      href: "/client/jobs/new",
     },
     {
       title: "Inbox",
@@ -23,15 +23,15 @@ export default function clientDashboardPage() {
       href: "/freelancer",
     },
     {
-      title: "Profile",
-      desc: "View/Edit your profile & skills!",
-      href: "/freelancer/profile",
+      title: "Jobs In Progress",
+      desc: "View all your current ongoing Jobs!",
+      href: "/client/jobs/inprogress",
     },
   ];
 
   return (
     <>
-      <h1 className="tracker-title">Freelancer Portal</h1>
+      <h1 className="tracker-title">Portal</h1>
       <div className="main-features-container">
         <section className="features-grid">
           {features.map((feature) => (
