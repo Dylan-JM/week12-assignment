@@ -6,6 +6,10 @@ const isProtectdRoute = createRouteMatcher([
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
+  const path = req.nextUrl.pathname;
+  if (path === "/freelancer/plans" || path.startsWith("/freelancer/plans/")) {
+    return;
+  }
   if (isProtectdRoute(req)) await auth.protect();
 });
 
