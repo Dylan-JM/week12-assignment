@@ -17,30 +17,29 @@ const createToken = (clientId, apiKey, claim, capability) => {
   return token;
 };
 
-const generateCapability = (claim) => {
-  if (claim.isMod) {
-    return { "*": ["*"] };
-  } else {
-    return {
-      "chat:general": ["subscribe", "publish", "presence", "history"],
-      "chat:random": ["subscribe", "publish", "presence", "history"],
-      "chat:announcements": ["subscribe", "presence", "history"],
-    };
-  }
-};
+const generateCapability = () => ({
+  "chat:*": ["subscribe", "publish", "presence", "history"],
+});
 
 export const GET = async () => {
   const user = await currentUser();
+  if (!user) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
-  const userClaim = user.publicMetadata;
-  const userCapability = generateCapability(userClaim);
+  const apiKey = process.env.NEXT_PUBLIC_ABLY_API_KEY;
+  if (!apiKey) {
+    console.error("NEXT_PUBLIC_ABLY_API_KEY is not set.");
+    return Response.json(
+      { error: "Server misconfiguration: Ably key missing" },
+      { status: 503 },
+    );
+  }
 
-  const token = await createToken(
-    user.id,
-    process.env.ABLY_SECRET_KEY,
-    userClaim,
-    userCapability,
-  );
+  const userClaim = user.publicMetadata ?? {};
+  const userCapability = generateCapability();
+
+  const token = await createToken(user.id, apiKey, userClaim, userCapability);
 
   return Response.json(token);
 };
