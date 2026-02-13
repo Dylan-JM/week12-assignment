@@ -18,14 +18,14 @@ const reducer = (prev, event) => {
 const Chat = ({ channelName }) => {
   // 👉 Placeholder user to be replaced with the authenticated user later
   const { user, isLoaded } = useUser();
-
-  if (!isLoaded || !user) {
-    return null; // or a loading spinner
-  }
   const [messages, dispatch] = useReducer(reducer, []);
   // 👉 useChannel accepts the channel name and a function to invoke when
   //    new messages are received. We pass dispatch.
   const { channel, publish } = useChannel(channelName, dispatch);
+
+  if (!isLoaded || !user) {
+    return null; // or a loading spinner
+  }
 
   const publishMessage = (text) => {
     // 👉 Publish event through Ably
