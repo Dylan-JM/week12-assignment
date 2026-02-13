@@ -1,8 +1,0 @@
-.about-page{
-    display: grid;
-    grid-template-columns: repeat(2,2fr);
-    gap: 10px;
-    grid-auto-rows: minmax(100px, auto);
-}
-
-
