@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/dbConnection";
+import SetupForm from "./SetupForm";
 
 export default async function SetupPage() {
   const { userId } = await auth();
@@ -10,11 +11,11 @@ export default async function SetupPage() {
     "use server";
 
     const { userId } = await auth();
-    if (!userId) throw new Error("Unauthorized");
+    if (!userId) return { error: "Unauthorized" };
 
     const role = formData.get("role");
     if (role !== "client" && role !== "freelancer") {
-      throw new Error("Please select a role");
+      return { error: "Please select a role" };
     }
 
     await db.query(
@@ -24,7 +25,7 @@ export default async function SetupPage() {
       [userId, role]
     );
 
-    redirect("/");
+    return { success: true, role };
   }
 
   return (
@@ -33,29 +34,7 @@ export default async function SetupPage() {
       <p className="homepage-message mb-10 max-w-md text-center">
         Choose your role to get started.
       </p>
-      <form action={saveRole} className="flex flex-col items-center gap-6">
-        <div className="flex flex-col gap-2">
-          <label htmlFor="role" className="text-sm font-medium">
-            Role
-          </label>
-          <select
-            name="role"
-            id="role"
-            required
-            className="min-w-[200px] rounded border border-gray-300 px-4 py-2 text-base"
-          >
-            <option value="">Select a role</option>
-            <option value="client">Client</option>
-            <option value="freelancer">Freelancer</option>
-          </select>
-        </div>
-        <button
-          type="submit"
-          className="rounded bg-[rgb(0,153,255)] px-6 py-2 font-semibold text-white hover:opacity-90"
-        >
-          Save
-        </button>
-      </form>
+      <SetupForm saveRole={saveRole} />
     </main>
   );
 }

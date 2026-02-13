@@ -33,7 +33,9 @@ export default async function Header() {
               <Link href="/client/dashboard">Client Portal</Link>
             ) : role === "freelancer" ? (
               <Link href="/freelancer/dashboard">Freelancer Portal</Link>
-            ) : null}
+            ) : (
+              <Link href="/setup">Portal</Link>
+            )}
             <UserButton />
           </SignedIn>
         </div>
