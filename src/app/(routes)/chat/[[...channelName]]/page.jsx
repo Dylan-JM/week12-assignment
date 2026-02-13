@@ -2,7 +2,7 @@
 
 import { use, useMemo, useEffect, useState } from "react";
 import Chat from "@/app/(routes)/[[...channelName]]/chat/chat";
-import ContactsList from "@/app/(routes)/[[...channelName]]/chat/contacts-list";
+import ConversationList from "@/app/(routes)/[[...channelName]]/chat/conversation-list";
 import { Realtime } from "ably";
 import { AblyProvider, ChannelProvider } from "ably/react";
 import { useUser } from "@clerk/nextjs";
@@ -10,27 +10,37 @@ import { useUser } from "@clerk/nextjs";
 const Page = ({ params }) => {
   const resolvedParams = use(params);
   const { user, isLoaded } = useUser();
+  const [conversations, setConversations] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [role, setRole] = useState(null);
-  const [contactsError, setContactsError] = useState(null);
+  const [loadError, setLoadError] = useState(null);
 
   const channelSlug = Array.isArray(resolvedParams?.channelName)
     ? resolvedParams.channelName[0]
     : resolvedParams?.channelName;
   const channelName = channelSlug ? `chat:${channelSlug}` : null;
 
-  useEffect(() => {
-    if (!isLoaded || !user) return;
-    fetch("/api/chat/contacts")
+  const fetchConversations = (options = {}) => {
+    if (!user) return;
+    const silent = options.silent === true;
+    fetch("/api/chat/conversations")
       .then((res) => {
-        if (!res.ok) throw new Error(res.status === 401 ? "Sign in required" : "Failed to load contacts");
+        if (!res.ok) throw new Error(res.status === 401 ? "Sign in required" : "Failed to load");
         return res.json();
       })
       .then((data) => {
         setRole(data.role);
+        setConversations(data.conversations ?? []);
         setContacts(data.contacts ?? []);
       })
-      .catch((err) => setContactsError(err.message));
+      .catch((err) => {
+        if (!silent) setLoadError(err.message);
+      });
+  };
+
+  useEffect(() => {
+    if (!isLoaded || !user) return;
+    fetchConversations();
   }, [isLoaded, user]);
 
   const client = useMemo(
@@ -59,10 +69,10 @@ const Page = ({ params }) => {
     );
   }
 
-  if (contactsError) {
+  if (loadError) {
     return (
       <div className="flex h-[calc(100vh-72.8px)] items-center justify-center">
-        <p className="text-gray-600">{contactsError}</p>
+        <p className="text-gray-600">{loadError}</p>
       </div>
     );
   }
@@ -72,18 +82,24 @@ const Page = ({ params }) => {
       <div className="grid h-[calc(100vh-72.8px)] grid-cols-4">
         <aside className="border-r border-gray-200 p-5">
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">
-            {role === "freelancer" ? "Clients" : "Freelancers"}
+            Messages
           </h2>
-          <ContactsList
+          <ConversationList
+            conversations={conversations}
             contacts={contacts}
             currentUserId={user.id}
+            role={role}
             basePath="/chat"
           />
         </aside>
         <main className="col-span-3 flex flex-col">
           {channelName ? (
             <ChannelProvider channelName={channelName}>
-              <Chat channelName={channelName} />
+              <Chat
+              channelName={channelName}
+              onMessageSent={() => fetchConversations({ silent: true })}
+              onMessageReceived={() => fetchConversations({ silent: true })}
+            />
             </ChannelProvider>
           ) : (
             <div className="flex flex-1 items-center justify-center text-gray-500">
