@@ -1,4 +1,5 @@
 import { db } from "@/lib/dbConnection";
+import Link from "next/link";
 
 export default async function clientPage() {
   const { rows } = await db.query(`SELECT * FROM fm_jobs`);
@@ -7,29 +8,35 @@ export default async function clientPage() {
     <>
       <div className="all-client-jobs-container">
         {rows.map((post) => (
-          <div className="client-job-container" key={post.id}>
-            <h1 className="job-title">{post.title}</h1>
-            <p className="job-description">Description : {post.description}</p>
-            <div className="specific-jobs-details">
-              <h2 className="job-budget">Budget : £{post.budget}</h2>
-              <h2 className="job-deadline">
-                Deadline: {new Date(post.deadline).toLocaleDateString()}
-              </h2>
+          <Link href={`/client/jobs/${post.id}`} key={post.id}>
+            <div className="client-job-container">
+              <h1 className="job-title">{post.title}</h1>
+              <p className="job-description">
+                Description : {post.description}
+              </p>
+              <div className="specific-jobs-details">
+                <h2 className="job-budget">Budget : £{post.budget}</h2>
+                <h2 className="job-deadline">
+                  Deadline: {new Date(post.deadline).toLocaleDateString()}
+                </h2>
 
-              <h2 className="job-category">Category : {post.category}</h2>
-              <div>
-                <h2 className="job-skills-required-title">Skills Required:</h2>
-                <ul>
-                  {post.skills_required.map((skill, index) => (
-                    <li className="job-skill" key={index}>
-                      {skill}
-                    </li>
-                  ))}
-                </ul>
+                <h2 className="job-category">Category : {post.category}</h2>
+                <div>
+                  <h2 className="job-skills-required-title">
+                    Skills Required:
+                  </h2>
+                  <ul>
+                    {post.skills_required.map((skill, index) => (
+                      <li className="job-skill" key={index}>
+                        {skill}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
+              <button className="message-client-btn">Message Client</button>
             </div>
-            <button className="message-client-btn">Message Client</button>
-          </div>
+          </Link>
         ))}
       </div>
     </>
