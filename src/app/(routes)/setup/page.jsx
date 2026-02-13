@@ -22,8 +22,25 @@ export default async function SetupPage() {
       `INSERT INTO fm_users (clerk_id, role)
        VALUES ($1, $2)
        ON CONFLICT (clerk_id) DO UPDATE SET role = EXCLUDED.role`,
-      [userId, role]
+      [userId, role],
     );
+
+    const bio = formData.get("bio");
+    const name = formData.get("name");
+
+    if (role === "client") {
+      await db.query(
+        `INSERT INTO fm_clients (clerk_id, name, bio)
+       VALUES ($1, $2, $3)`,
+        [userId, name, bio],
+      );
+    } else if (role === "freelancer") {
+      await db.query(
+        `INSERT INTO fm_freelancers (clerk_id, name, bio)
+        VALUES ($1, $2, $3)`,
+        [userId, name, bio],
+      );
+    }
 
     return { success: true, role };
   }
