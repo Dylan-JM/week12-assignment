@@ -9,9 +9,9 @@ export default function ContactPage(){
                 {/* <Header /> */}
                 {/* <Nav /> */}
             </div>
-            <container className='contact-form'>
+            <section className='contact-form'>
                 {/* <ContactForm /> */}
-            </container>
+            </section>
 			{/* <Footer /> */}
 		</>
 	);
