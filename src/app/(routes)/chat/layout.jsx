@@ -6,7 +6,7 @@ import { Realtime } from "ably";
 import { AblyProvider } from "ably/react";
 import { useUser } from "@clerk/nextjs";
 import { clsx } from "clsx";
-import ConversationList from "@/app/(routes)/[[...channelName]]/chat/conversation-list";
+import ConversationList from "@/components/chat/conversation-list";
 import { ChatLayoutContext } from "./chat-layout-context";
 import styles from "./page.module.css";
 

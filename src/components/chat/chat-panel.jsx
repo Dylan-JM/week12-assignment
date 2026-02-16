@@ -1,6 +1,6 @@
 import MessageInput from "./message-input";
 import MessageList from "./message-list";
-import styles from "./chat.module.css";
+import styles from "./chat-panel.module.css";
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useChannel } from "ably/react";

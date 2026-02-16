@@ -1,7 +1,7 @@
 "use client";
 
 import { ChannelProvider } from "ably/react";
-import Chat from "@/app/(routes)/[[...channelName]]/chat/chat";
+import Chat from "@/components/chat/chat-panel";
 import { useChatLayout } from "./chat-layout-context";
 
 export default function ChatPage() {
