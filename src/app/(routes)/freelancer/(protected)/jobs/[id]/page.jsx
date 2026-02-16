@@ -1,5 +1,6 @@
 import { db } from "@/lib/dbConnection";
 import { auth } from "@clerk/nextjs/server";
+import ProposalForm from "./proposal-form";
 
 export default async function SpecificJobPage({ params }) {
   const { userId } = await auth();
@@ -24,6 +25,9 @@ export default async function SpecificJobPage({ params }) {
           <p className="column-info">{job.category}</p>
           <p className="column-info">{job.skills_required}</p>
           <p>${Number(job.budget).toFixed(2)}</p>
+          <div className="mt-4">
+            <ProposalForm jobId={job.id} />
+          </div>
         </div>
       ))}
     </>
