@@ -60,11 +60,16 @@ export const GET = async (request) => {
     const sid = String(m.sender_id ?? "").trim();
     let text = m.content;
     let proposalJobId = null;
+    let messageType = null;
     try {
       const parsed = JSON.parse(m.content);
       if (parsed && parsed.type === "proposal") {
         text = parsed.text ?? m.content;
         proposalJobId = parsed.jobId ?? null;
+        messageType = "proposal";
+      } else if (parsed && parsed.type === "proposal_accepted") {
+        text = parsed.text ?? "Proposal accepted";
+        messageType = "proposal_accepted";
       }
     } catch {
       // plain text message
@@ -72,7 +77,7 @@ export const GET = async (request) => {
     return {
       id: m.id,
       name: "ADD",
-      data: { text, proposalJobId, avatarUrl: avatars[sid] ?? null, senderId: sid },
+      data: { text, proposalJobId, messageType, avatarUrl: avatars[sid] ?? null, senderId: sid },
       timestamp: m.created_at,
     };
   });
