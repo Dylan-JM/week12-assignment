@@ -15,7 +15,7 @@ export const POST = async (request) => {
   if (!jobId) return Response.json({ error: "jobId required" }, { status: 400 });
 
   const jobResult = await db.query(
-    "SELECT id, client_id, deadline FROM fm_jobs WHERE id = $1",
+    "SELECT id, client_id, deadline, title FROM fm_jobs WHERE id = $1",
     [jobId]
   );
   const job = jobResult.rows[0];
@@ -69,10 +69,14 @@ export const POST = async (request) => {
   const acceptedContent = JSON.stringify({
     type: "proposal_accepted",
     text: "Proposal accepted",
+    jobId,
+    jobTitle: job.title || "Job",
+    startDate,
+    endDate,
   });
   await db.query(
     "INSERT INTO fm_messages (conversation_id, sender_id, content) VALUES ($1, $2, $3)",
-    [proposal.conversation_id, userId, acceptedContent]
+    [proposal.conversation_id, proposal.sender_id, acceptedContent]
   );
 
   return Response.json({ ok: true });

@@ -25,7 +25,10 @@ const Chat = ({ channelName, onMessageSent, onMessageReceived }) => {
   }, [channelSlug, refetchMessages]);
 
   function handleNewMessage(event) {
-    setMessages((prev) => [...prev, { ...event, id: event.id || `live-${Date.now()}` }]);
+    const data = event.data || event;
+    const id = data.id ?? event.id ?? `live-${Date.now()}`;
+    const msg = { id, name: event.name || "ADD", data: typeof data.data !== "undefined" ? data : { ...data } };
+    setMessages((prev) => [...prev, msg]);
     if (onMessageReceived) onMessageReceived();
   }
   const { publish } = useChannel(channelName, handleNewMessage);

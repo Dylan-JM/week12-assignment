@@ -4,6 +4,12 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 const MessageList = ({ messages, currentUserId, onRefetchMessages }) => {
   const [acceptingId, setAcceptingId] = useState(null);
 
+  const acceptedJobIds = new Set(
+    messages
+      .filter((m) => m.data?.messageType === "proposal_accepted" && m.data?.acceptedJobId)
+      .map((m) => m.data.acceptedJobId)
+  );
+
   const handleAcceptProposal = async (jobId) => {
     if (!jobId || !onRefetchMessages) return;
     setAcceptingId(jobId);
@@ -27,18 +33,26 @@ const MessageList = ({ messages, currentUserId, onRefetchMessages }) => {
     const isProposalAccepted = message.data?.messageType === "proposal_accepted";
     const isForCurrentUser = currentUserId && senderId && senderId !== currentUserId;
     const isAccepting = acceptingId === message.data?.proposalJobId;
+    const alreadyAccepted = isProposal && acceptedJobIds.has(message.data?.proposalJobId);
 
     if (isProposalAccepted) {
+      const jobTitle = message.data?.jobTitle;
+      const startDate = message.data?.startDate;
+      const endDate = message.data?.endDate;
       return (
         <li key={message.id} className="my-2">
           <div className="rounded-lg border-2 border-green-200 bg-green-50 px-4 py-3">
             <div className="flex items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 text-white">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-500 text-white">
                 ✓
               </span>
-              <div>
+              <div className="min-w-0">
                 <p className="font-semibold text-green-800">Proposal accepted</p>
-                <p className="text-sm text-green-700">Contract created with start and end dates set.</p>
+                {jobTitle && <p className="mt-1 text-sm font-medium text-green-800">{jobTitle}</p>}
+                <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0 text-sm text-green-700">
+                  {startDate && <span>Start: {new Date(startDate).toLocaleDateString()}</span>}
+                  {endDate && <span>End: {new Date(endDate).toLocaleDateString()}</span>}
+                </div>
               </div>
             </div>
           </div>
@@ -60,7 +74,7 @@ const MessageList = ({ messages, currentUserId, onRefetchMessages }) => {
           </Avatar>
           <p>{message.data?.text}</p>
         </div>
-        {isProposal && isForCurrentUser && (
+        {isProposal && isForCurrentUser && !alreadyAccepted && (
           <div className="ml-10">
             <button
               type="button"

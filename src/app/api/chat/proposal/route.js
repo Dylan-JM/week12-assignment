@@ -1,5 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/dbConnection";
+import Ably from "ably";
 
 export const POST = async (request) => {
   const { userId } = await auth();
@@ -52,11 +53,29 @@ export const POST = async (request) => {
     jobId,
     text: String(message),
   });
-  await db.query(
-    "INSERT INTO fm_messages (conversation_id, sender_id, content) VALUES ($1, $2, $3)",
+  const insertMsg = await db.query(
+    "INSERT INTO fm_messages (conversation_id, sender_id, content) VALUES ($1, $2, $3) RETURNING id",
     [conversationId, userId, proposalContent]
   );
+  const messageId = insertMsg.rows[0].id;
 
   const channelSlug = "dm-" + [job.client_clerk_id, userId].sort().join("-");
+  const channelName = "chat:" + channelSlug;
+  const apiKey = process.env.ABLY_API_KEY || process.env.NEXT_PUBLIC_ABLY_API_KEY;
+  if (apiKey) {
+    try {
+      const rest = new Ably.Rest(apiKey);
+      const channel = rest.channels.get(channelName);
+      await channel.publish("ADD", {
+        id: messageId,
+        text: String(message),
+        proposalJobId: jobId,
+        senderId: userId,
+      });
+    } catch (err) {
+      console.error("Ably publish failed:", err);
+    }
+  }
+
   return Response.json({ ok: true, channelSlug });
 };
