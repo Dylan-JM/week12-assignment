@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 const skillOptions = [
   "JavaScript",
@@ -18,8 +20,31 @@ const skillOptions = [
 ];
 
 export default function FreelancersList({ freelancers }) {
+  const { user } = useUser();
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const [selectedSkill, setSelectedSkill] = useState("");
+  const [messageLoadingId, setMessageLoadingId] = useState(null);
+
+  async function handleMessage(freelancer) {
+    if (!freelancer.clerk_id || !user) return;
+    setMessageLoadingId(freelancer.id);
+    try {
+      const res = await fetch("/api/chat/conversations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ otherClerkId: freelancer.clerk_id }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to start conversation");
+      if (data.channelSlug) {
+        router.push(`/chat?channel=${encodeURIComponent(data.channelSlug)}`);
+      }
+    } catch (err) {
+      console.error(err);
+      setMessageLoadingId(null);
+    }
+  }
 
   const filteredFreelancers = useMemo(() => {
     return freelancers.filter((freelancer) => {
@@ -80,6 +105,14 @@ export default function FreelancersList({ freelancers }) {
                 </li>
               ))}
             </ul>
+            <button
+              type="button"
+              onClick={() => handleMessage(freelancer)}
+              disabled={!user || !freelancer.clerk_id || messageLoadingId === freelancer.id}
+              className="find-freelancer-message-btn"
+            >
+              {messageLoadingId === freelancer.id ? "Opening…" : "Message"}
+            </button>
           </div>
         ))}
       </div>
