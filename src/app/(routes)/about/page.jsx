@@ -1,29 +1,50 @@
-import "./about.css";
-
 export default function About() {
   return (
-    <>
-      {/* <Header /> */}
-      <section className="about-page">
-        <p className="about-p-1">
-          This is a mighty fine Next.js payments and expenses site. Where you
-          can let us all here know where you are and what you're doing!
-        </p>
-        <img
-          className="about-image-1"
-          src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fd1ut31suh1xx3k.cloudfront.net%2Fwp-content%2Fuploads%2F2018%2F11%2F15135728%2Fshutterstock_1228756897.jpg&f=1&nofb=1&ipt=a35aeef94bac0023512b00d98743facec051e63836b466f41cf12fc5360b6674"
-          alt="An image of a beach."
-        />
-        <img
-          className="about-image-2"
-          src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fd1ut31suh1xx3k.cloudfront.net%2Fwp-content%2Fuploads%2F2018%2F11%2F15135728%2Fshutterstock_1228756897.jpg&f=1&nofb=1&ipt=a35aeef94bac0023512b00d98743facec051e63836b466f41cf12fc5360b6674"
-          alt="An image of a beach."
-        />
-        <p className="about-p-2">
-          This is where you will find some more information about us
+    <main className="about-container">
+      <img
+        src="https://cdn-dynmedia-1.microsoft.com/is/image/microsoftcorp/O2019-Hero-image-x2:VP1-539x440?resMode=sharp2&op_usm=1.5,0.65,15,0&wid=1920&hei=720&qlt=75&fit=constrain"
+        className="about-us-image"
+        id="officeimg"
+      />
+      <section className="about-hero">
+        <h1>About Us</h1>
+        <p>
+          We are a modern freelance marketplace connecting clients with skilled
+          professionals. Businesses can post jobs, set their requirements, and
+          receive applications from freelancers ready to deliver high-quality
+          work on time and within budget.
         </p>
       </section>
-      {/* <Footer /> */}
-    </>
+
+      <img
+        src="https://www.mckinsey.com/~/media/mckinsey/featured%20insights/mckinsey%20explainers/what%20is%20talent%20management/what-is-talent-management-802557394-thumb-1536x1536.jpg?mw=677&car=42:25"
+        className="about-us-image"
+        id="teamworkimg"
+      />
+      <section className="about-content">
+        <h2>Our Mission</h2>
+        <p>
+          Our mission is to create a streamlined platform where opportunity
+          meets talent. We empower clients to find the right expertise quickly,
+          while giving freelancers access to meaningful projects and secure
+          payments for the work they complete.
+        </p>
+      </section>
+
+      <img
+        src="https://pix4free.org/assets/library/2021-06-16/originals/reliable.jpg"
+        className="about-us-image"
+        id="trackingimg"
+      />
+      <section className="about-content">
+        <h2>Why We Exist</h2>
+        <p>
+          Finding reliable freelancers and trustworthy clients shouldn't be
+          complicated. We exist to simplify the hiring process, provide a safe
+          and transparent workflow, and ensure freelancers get paid for the
+          value they deliver.
+        </p>
+      </section>
+    </main>
   );
 }

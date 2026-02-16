@@ -574,9 +574,83 @@ ul {
   gap: 1rem;
 }
 
+.contact-us-textarea,
+.contact-us-input {
+  border: 1px solid grey;
+  border-radius: 12px;
+  cursor: pointer;
+  padding: 0.5rem;
+  width: 80%;
+}
+
+.contact-us-title {
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+/* --------------------------------------- About Page -------------------------------------------- */
+
+.about-container {
+  max-width: 60%;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.about-us-image {
+  width: 70%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  place-self: center;
+  border-radius: 50px;
+  margin: 20px 0 20px 0;
+}
+
+#teamworkimg {
+  grid-row-start: 2;
+  grid-column-start: 2;
+}
+
+.about-hero {
+  text-align: center;
+}
+
+.about-hero h1 {
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 700;
+}
+
+.about-hero p {
+  margin-top: 1rem;
+  font-size: clamp(1rem, 2vw, 1.1rem);
+  color: #555;
+}
+
+.about-content {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.about-content h2 {
+  margin-top: 2rem;
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  font-weight: 600;
+}
+
+.about-content p {
+  margin-top: 0.75rem;
+  color: #444;
+  line-height: 1.7;
+  font-size: clamp(1rem, 2vw, 1.1rem);
+}
+
 /*------------------ Jobs ID page -------------------*/
-
-
 
 /*---break---*/
 

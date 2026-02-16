@@ -15,7 +15,7 @@ export default function Home() {
       <div className="feature-card-container">
         <div className="feature-card">
           <img
-            src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Google-Analytics-4-Blog-Post-Hea.width-1000.format-webp.webp"
+            src="https://img.freepik.com/premium-vector/checkmark-sign-verified-symbol-approval-done-element-collection_809852-1013.jpg"
             alt=""
             className="feature-card-img"
           />
@@ -27,7 +27,7 @@ export default function Home() {
         </div>
         <div className="feature-card">
           <img
-            src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Google-Analytics-4-Blog-Post-Hea.width-1000.format-webp.webp"
+            src="https://www.talentprise.com/wp-content/uploads/2024/08/job-matching.png"
             alt=""
             className="feature-card-img"
           />
@@ -40,7 +40,7 @@ export default function Home() {
         </div>
         <div className="feature-card">
           <img
-            src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Google-Analytics-4-Blog-Post-Hea.width-1000.format-webp.webp"
+            src="https://www.vonage.com/content/dam/vonage/us-en/resources/imagery/article-thumbnails/API-SEO_SECURE-MESSAGING-Blog-Thumbnail.png"
             alt=""
             className="feature-card-img"
           />
