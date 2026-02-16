@@ -1,11 +1,9 @@
 "use client"
 
 import JobsChart from './JobsChart'
+import Link from 'next/link'
 
 export default function JobsClient({id}){
-  async function expenses() {
-    console.log("Expenses for job:", id);
-  }
 
   async function income() {
     console.log("Income for job:", id);
@@ -20,7 +18,7 @@ export default function JobsClient({id}){
             <section className='flex flex-row'>
                 <section className='flex flex-col'>
                     <h3 className='text-lg'>Expenses</h3>
-                    <button onClick={expenses} className=''>Plus sign</button>
+                    <Link href={`/freelancer/jobs/${id}/expense-form`}>Add expense</Link>
                     <section className='flex flex-col feature-card-container'>
                         <p className='feature-card'>Expense 1</p>
                         <p className='feature-card'>Expense 2</p>
@@ -29,7 +27,7 @@ export default function JobsClient({id}){
                 </section>
                 <section className='flex flex-col'>
                     <h3 className='text-lg'>Income</h3>
-                    <button onClick={income} className=''>Plus sign</button>
+                    <Link href={`/freelancer/jobs/${id}/income-form`}>Add Income</Link>
                     <section className='feature-card-container'>
                         <p className='feature-card'>Income 1</p>
                     </section>
