@@ -1,6 +1,8 @@
 import { db } from "@/lib/dbConnection";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import EditableUsername from "@/components/EditableUsername";
+import Editablebio from "@/components/EditBio";
 
 export default async function FreelancerProfilePage({ params }) {
   const { id } = await params;
@@ -78,17 +80,52 @@ export default async function FreelancerProfilePage({ params }) {
     redirect(`/freelancer/profile/${id}`);
   }
 
+  async function handleUsernameChange(formData) {
+    "use server";
+
+    const name = formData.get("name");
+
+    await db.query(
+      `UPDATE fm_freelancers
+     SET name = $1
+     WHERE clerk_id = $2`,
+      [name, id],
+    );
+
+    revalidatePath(`/freelancer/profile/${id}`);
+    redirect(`/freelancer/profile/${id}`);
+  }
+
+  async function handleBioChange(formData) {
+    "use server";
+
+    const bio = formData.get("bio");
+
+    await db.query(
+      `UPDATE fm_freelancers
+     SET bio = $1
+     WHERE clerk_id = $2`,
+      [bio, id],
+    );
+
+    revalidatePath(`/freelancer/profile/${id}`);
+    redirect(`/freelancer/profile/${id}`);
+  }
+
   return (
     <>
       <div className="user-profile-container">
         <h1 className="profile-title">Profile</h1>
         <div className="user-details">
           <div className="profile-skills-form-contents">
-            <p>Profile ID: {id}</p>
-            <p>Role: {userDetails[0].role}</p>
-            <p>Username: {username}</p>
-            <p>Bio: {bio}</p>
-            <ul className="profile-skills">
+            <EditableUsername
+              username={username}
+              action={handleUsernameChange}
+            />
+            <p className="profile-role">Role: {userDetails[0].role}</p>
+            <Editablebio bio={bio} action={handleBioChange} />
+
+            <ul className="profile-skills" key={id}>
               {freelancerDetails[0]?.skills?.length > 0 ? (
                 freelancerDetails[0].skills.map((skill, index) => (
                   <li className="job-skill" key={index}>
@@ -133,8 +170,8 @@ export default async function FreelancerProfilePage({ params }) {
             <div className="client-job-form-group">
               <div className="profile-skills-container">
                 {skillOptions.map((skill) => (
-                  <div className="skill-add-conatiner">
-                    <label key={skill} className="checkbox-label">
+                  <div className="skill-add-conatiner" key={skill}>
+                    <label className="checkbox-label">
                       <input
                         type="checkbox"
                         className="profile-skill-input"
@@ -152,17 +189,6 @@ export default async function FreelancerProfilePage({ params }) {
               Add Skills
             </button>
           </form>
-        </div>
-      </div>
-      <div className="user-profile-container">
-        <h1 className="profile-title">About</h1>
-        <div className="user-details">
-          <p>About Content Here</p>
-          <p>About Content Here</p>
-          <p>About Content Here</p>
-          <p>About Content Here</p>
-          <p>About Content Here</p>
-          <p>About Content Here</p>
         </div>
       </div>
     </>
