@@ -13,6 +13,18 @@ export default async function SpecificJobPage({ params }) {
     [id],
   );
 
+  let alreadyProposed = false;
+  if (jobDetails.length > 0 && userId) {
+    const job = jobDetails[0];
+    const { rows: proposalRows } = await db.query(
+      `SELECT 1 FROM fm_messages
+       WHERE sender_id = $1 AND content::jsonb->>'type' = 'proposal' AND content::jsonb->>'jobId' = $2
+       LIMIT 1`,
+      [userId, job.id]
+    );
+    alreadyProposed = proposalRows.length > 0;
+  }
+
   return (
     <>
       <h1>Job Page</h1>
@@ -30,7 +42,7 @@ export default async function SpecificJobPage({ params }) {
           <p className="column-info">{job.skills_required}</p>
           <p>${Number(job.budget).toFixed(2)}</p>
           <div className="mt-4">
-            <ProposalForm jobId={job.id} />
+            <ProposalForm jobId={job.id} alreadyProposed={alreadyProposed} />
           </div>
         </div>
       ))}
