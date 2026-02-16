@@ -15,7 +15,7 @@ const MessageInput = ({ onSubmit, disabled }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="w-full min-w-0">
       <Input
         type="text"
         value={input}
@@ -24,6 +24,7 @@ const MessageInput = ({ onSubmit, disabled }) => {
         placeholder={
           disabled ? "This input has been disabled." : "Your message here"
         }
+        className="min-h-(--chat-input-height) w-full min-w-0 py-3 text-base"
       />
     </form>
   );

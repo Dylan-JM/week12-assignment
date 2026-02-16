@@ -1,5 +1,6 @@
 import MessageInput from "./message-input";
 import MessageList from "./message-list";
+import styles from "./chat.module.css";
 
 import { useState, useEffect, useCallback } from "react";
 import { useChannel } from "ably/react";
@@ -9,7 +10,9 @@ const Chat = ({ channelName, onMessageSent, onMessageReceived }) => {
   const { user, isLoaded } = useUser();
   const [messages, setMessages] = useState([]);
 
-  const channelSlug = channelName?.startsWith("chat:") ? channelName.slice(5) : channelName;
+  const channelSlug = channelName?.startsWith("chat:")
+    ? channelName.slice(5)
+    : channelName;
 
   const refetchMessages = useCallback(() => {
     if (!channelSlug) return;
@@ -21,13 +24,27 @@ const Chat = ({ channelName, onMessageSent, onMessageReceived }) => {
 
   useEffect(() => {
     if (!channelSlug) return;
-    refetchMessages();
-  }, [channelSlug, refetchMessages]);
+    let cancelled = false;
+    fetch(`/api/chat/messages?channel=${encodeURIComponent(channelSlug)}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (!cancelled) setMessages(data.messages ?? []);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [channelSlug]);
 
   function handleNewMessage(event) {
     const data = event.data || event;
     const id = data.id ?? event.id ?? `live-${Date.now()}`;
-    const msg = { id, name: event.name || "ADD", data: typeof data.data !== "undefined" ? data : { ...data } };
+    const msg = {
+      id,
+      name: event.name || "ADD",
+      data: typeof data.data !== "undefined" ? data : { ...data },
+      timestamp: data.timestamp ?? new Date().toISOString(),
+    };
     setMessages((prev) => [...prev, msg]);
     if (onMessageReceived) onMessageReceived();
   }
@@ -47,22 +64,29 @@ const Chat = ({ channelName, onMessageSent, onMessageReceived }) => {
         if (res.ok && onMessageSent) onMessageSent();
       })
       .catch(() => {});
-    publish({ name: "ADD", data: { text, avatarUrl: user.imageUrl } });
+    publish({
+      name: "ADD",
+      data: {
+        text,
+        avatarUrl: user.imageUrl,
+        senderId: user.id,
+      },
+    });
   }
 
   return (
-    <>
-      <div className="overflow-y-auto p-5">
+    <div className={`${styles.root} flex h-full w-full min-w-0 flex-col`}>
+      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto bg-(--chat-messages-bg) p-(--chat-panel-padding)">
         <MessageList
           messages={messages}
           currentUserId={user?.id}
           onRefetchMessages={refetchMessages}
         />
       </div>
-      <div className="mt-auto p-5">
+      <div className="flex w-full shrink-0 items-center border-t border-(--chat-input-wrap-border) bg-(--chat-input-wrap-bg) p-(--chat-panel-padding)">
         <MessageInput onSubmit={publishMessage} />
       </div>
-    </>
+    </div>
   );
 };
 export default Chat;

@@ -1,5 +1,17 @@
 import { useState } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import styles from "./message-list.module.css";
+
+function formatMessageTime(date) {
+  if (!date) return "";
+  const d = new Date(date);
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const year = String(d.getFullYear()).slice(-2);
+  const hours = String(d.getHours()).padStart(2, "0");
+  const mins = String(d.getMinutes()).padStart(2, "0");
+  return `${day}/${month}/${year} ${hours}:${mins}`;
+}
 
 const MessageList = ({ messages, currentUserId, onRefetchMessages }) => {
   const [acceptingId, setAcceptingId] = useState(null);
@@ -7,13 +19,18 @@ const MessageList = ({ messages, currentUserId, onRefetchMessages }) => {
 
   const acceptedJobIds = new Set(
     messages
-      .filter((m) => m.data?.messageType === "proposal_accepted" && m.data?.acceptedJobId)
-      .map((m) => m.data.acceptedJobId)
+      .filter(
+        (m) =>
+          m.data?.messageType === "proposal_accepted" && m.data?.acceptedJobId,
+      )
+      .map((m) => m.data.acceptedJobId),
   );
   const deniedJobIds = new Set(
     messages
-      .filter((m) => m.data?.messageType === "proposal_denied" && m.data?.deniedJobId)
-      .map((m) => m.data.deniedJobId)
+      .filter(
+        (m) => m.data?.messageType === "proposal_denied" && m.data?.deniedJobId,
+      )
+      .map((m) => m.data.deniedJobId),
   );
 
   const handleAcceptProposal = async (jobId, freelancerClerkId) => {
@@ -50,32 +67,49 @@ const MessageList = ({ messages, currentUserId, onRefetchMessages }) => {
     const avatarUrl = message.data?.avatarUrl;
     const senderId = message.data?.senderId;
     const fallback = senderId ? senderId.slice(-1).toUpperCase() : "?";
+    const isMe = currentUserId && senderId && senderId === currentUserId;
     const isProposal = Boolean(message.data?.proposalJobId);
-    const isProposalAccepted = message.data?.messageType === "proposal_accepted";
+    const isProposalAccepted =
+      message.data?.messageType === "proposal_accepted";
     const isProposalDenied = message.data?.messageType === "proposal_denied";
-    const isForCurrentUser = currentUserId && senderId && senderId !== currentUserId;
+    const isForCurrentUser =
+      currentUserId && senderId && senderId !== currentUserId;
     const isAccepting = acceptingId === message.data?.proposalJobId;
     const isDenying = denyingId === message.data?.proposalJobId;
-    const alreadyAccepted = isProposal && acceptedJobIds.has(message.data?.proposalJobId);
-    const alreadyDenied = isProposal && deniedJobIds.has(message.data?.proposalJobId);
+    const alreadyAccepted =
+      isProposal && acceptedJobIds.has(message.data?.proposalJobId);
+    const alreadyDenied =
+      isProposal && deniedJobIds.has(message.data?.proposalJobId);
 
     if (isProposalAccepted) {
       const jobTitle = message.data?.jobTitle;
       const startDate = message.data?.startDate;
       const endDate = message.data?.endDate;
       return (
-        <li key={message.id} className="my-2">
-          <div className="rounded-lg border-2 border-green-200 bg-green-50 px-4 py-3">
+        <li key={message.id} className="flex w-full justify-center">
+          <div className="max-w-[85%] rounded-lg border-2 border-(--chat-system-success-border) bg-(--chat-system-success-bg) px-4 py-3">
             <div className="flex items-center gap-2">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-500 text-white">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-(--chat-system-success-icon-bg) text-white">
                 ✓
               </span>
               <div className="min-w-0">
-                <p className="font-semibold text-green-800">Proposal accepted</p>
-                {jobTitle && <p className="mt-1 text-sm font-medium text-green-800">{jobTitle}</p>}
-                <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0 text-sm text-green-700">
-                  {startDate && <span>Start: {new Date(startDate).toLocaleDateString()}</span>}
-                  {endDate && <span>End: {new Date(endDate).toLocaleDateString()}</span>}
+                <p className="font-semibold text-(--chat-system-success-text)">
+                  Proposal accepted
+                </p>
+                {jobTitle && (
+                  <p className="mt-1 text-sm font-medium text-(--chat-system-success-text)">
+                    {jobTitle}
+                  </p>
+                )}
+                <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0 text-sm text-(--chat-system-success-muted)">
+                  {startDate && (
+                    <span>
+                      Start: {new Date(startDate).toLocaleDateString()}
+                    </span>
+                  )}
+                  {endDate && (
+                    <span>End: {new Date(endDate).toLocaleDateString()}</span>
+                  )}
                 </div>
               </div>
             </div>
@@ -86,13 +120,15 @@ const MessageList = ({ messages, currentUserId, onRefetchMessages }) => {
 
     if (isProposalDenied) {
       return (
-        <li key={message.id} className="my-2">
-          <div className="rounded-lg border-2 border-red-200 bg-red-50 px-4 py-3">
+        <li key={message.id} className="flex w-full justify-center">
+          <div className="max-w-[85%] rounded-lg border-2 border-(--chat-system-denied-border) bg-(--chat-system-denied-bg) px-4 py-3">
             <div className="flex items-center gap-2">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-red-500 text-white">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-(--chat-system-denied-icon-bg) text-white">
                 ✕
               </span>
-              <p className="font-semibold text-red-800">Proposal denied</p>
+              <p className="font-semibold text-(--chat-system-denied-text)">
+                Proposal denied
+              </p>
             </div>
           </div>
         </li>
@@ -102,41 +138,76 @@ const MessageList = ({ messages, currentUserId, onRefetchMessages }) => {
     return (
       <li
         key={message.id}
-        className="bg-slate-50 group my-2 flex flex-col gap-2 p-3"
+        className={`flex w-full ${isMe ? "justify-end" : "justify-start"}`}
       >
-        <div className="flex items-center">
-          <Avatar className="mr-2">
+        <div
+          className={`flex min-w-0 items-end gap-2 ${isMe ? "flex-row-reverse" : "flex-row"}`}
+        >
+          <Avatar className="h-8 w-8 shrink-0">
             <AvatarImage src={avatarUrl} alt="" />
             <AvatarFallback className="bg-gray-200 text-gray-600">
               {fallback}
             </AvatarFallback>
           </Avatar>
-          <p>{message.data?.text}</p>
-        </div>
-        {isProposal && isForCurrentUser && !alreadyAccepted && !alreadyDenied && (
-          <div className="ml-10 flex gap-2">
-            <button
-              type="button"
-              onClick={() => handleAcceptProposal(message.data.proposalJobId, message.data.senderId)}
-              disabled={isAccepting}
-              className="rounded-md bg-green-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50"
+          <div
+            className={`flex min-w-0 max-w-(--chat-bubble-max-width) flex-col gap-2 ${isMe ? "items-end" : "items-start"}`}
+          >
+            <div
+              className={`min-w-0 max-w-full px-3 py-2 text-sm whitespace-pre-wrap wrap-break-word rounded-2xl border ${
+                isMe
+                  ? "rounded-bl-sm bg-(--chat-bubble-me-bg) border-(--chat-bubble-me-border) text-(--chat-bubble-me-text)"
+                  : "rounded-br-sm bg-(--chat-bubble-other-bg) border-(--chat-bubble-other-border) text-(--chat-bubble-other-text)"
+              }`}
             >
-              {isAccepting ? "Accepting…" : "Accept proposal"}
-            </button>
-            <button
-              type="button"
-              onClick={() => handleDenyProposal(message.data.proposalJobId)}
-              disabled={isDenying}
-              className="rounded-md bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
-            >
-              {isDenying ? "Denying…" : "Deny proposal"}
-            </button>
+              {message.data?.text}
+              {(message.timestamp ?? message.data?.createdAt) && (
+                <span className="mt-1 block text-xs opacity-75">
+                  {formatMessageTime(message.timestamp ?? message.data?.createdAt)}
+                </span>
+              )}
+            </div>
+            {isProposal &&
+              isForCurrentUser &&
+              !alreadyAccepted &&
+              !alreadyDenied && (
+                <div
+                  className={`flex gap-2 ${isMe ? "justify-end" : "justify-start"}`}
+                >
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleAcceptProposal(
+                        message.data.proposalJobId,
+                        message.data.senderId,
+                      )
+                    }
+                    disabled={isAccepting}
+                    className="rounded-md bg-green-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50"
+                  >
+                    {isAccepting ? "Accepting…" : "Accept proposal"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleDenyProposal(message.data.proposalJobId)
+                    }
+                    disabled={isDenying}
+                    className="rounded-md bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
+                  >
+                    {isDenying ? "Denying…" : "Deny proposal"}
+                  </button>
+                </div>
+              )}
           </div>
-        )}
+        </div>
       </li>
     );
   };
 
-  return <ul>{messages.map(createLi)}</ul>;
+  return (
+    <ul className={`${styles.root} flex flex-col gap-2 list-none p-0 m-0`}>
+      {messages.map(createLi)}
+    </ul>
+  );
 };
 export default MessageList;
