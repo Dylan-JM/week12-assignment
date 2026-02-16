@@ -16,14 +16,14 @@ const MessageList = ({ messages, currentUserId, onRefetchMessages }) => {
       .map((m) => m.data.deniedJobId)
   );
 
-  const handleAcceptProposal = async (jobId) => {
+  const handleAcceptProposal = async (jobId, freelancerClerkId) => {
     if (!jobId || !onRefetchMessages) return;
     setAcceptingId(jobId);
     try {
       const res = await fetch("/api/chat/accept-proposal", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ jobId }),
+        body: JSON.stringify({ jobId, freelancerClerkId }),
       });
       if (res.ok) onRefetchMessages();
     } finally {
@@ -117,7 +117,7 @@ const MessageList = ({ messages, currentUserId, onRefetchMessages }) => {
           <div className="ml-10 flex gap-2">
             <button
               type="button"
-              onClick={() => handleAcceptProposal(message.data.proposalJobId)}
+              onClick={() => handleAcceptProposal(message.data.proposalJobId, message.data.senderId)}
               disabled={isAccepting}
               className="rounded-md bg-green-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50"
             >
