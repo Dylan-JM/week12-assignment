@@ -1,4 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
+import { createClerkClient } from "@clerk/nextjs/server";
 import { db } from "@/lib/dbConnection";
 import Ably from "ably";
 
@@ -59,6 +60,15 @@ export const POST = async (request) => {
   );
   const messageId = insertMsg.rows[0].id;
 
+  let avatarUrl = null;
+  try {
+    const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
+    const user = await clerk.users.getUser(userId);
+    avatarUrl = user?.imageUrl ?? null;
+  } catch {
+    // use fallback in UI
+  }
+
   const channelSlug = "dm-" + [job.client_clerk_id, userId].sort().join("-");
   const channelName = "chat:" + channelSlug;
   const apiKey = process.env.ABLY_API_KEY || process.env.NEXT_PUBLIC_ABLY_API_KEY;
@@ -71,6 +81,7 @@ export const POST = async (request) => {
         text: String(message),
         proposalJobId: jobId,
         senderId: userId,
+        avatarUrl,
       });
     } catch (err) {
       console.error("Ably publish failed:", err);
