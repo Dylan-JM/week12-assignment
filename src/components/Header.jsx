@@ -1,9 +1,8 @@
-import Link from "next/link";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import HeaderClient from "./HeaderClient";
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/dbConnection";
 
-export default async function Header() {
+export default async function HeaderServer() {
   const { userId } = await auth();
   let role = null;
   if (userId) {
@@ -14,32 +13,5 @@ export default async function Header() {
     role = rows[0]?.role ?? null;
   }
 
-  return (
-    <>
-      <div className="header">
-        <h1 className="website-name">Website Name</h1>
-        <div className="navbar-container">
-          <Link href="/">Home</Link>
-          <Link href="/about">About</Link>
-          <Link href="/contact">Contact</Link>
-          <Link href="/freelancer/plans">Plans</Link>
-          <SignedOut>
-            <SignInButton>
-              <button className="btn-signin">Sign In</button>
-            </SignInButton>
-          </SignedOut>
-          <SignedIn>
-            {role === "client" ? (
-              <Link href="/client/dashboard">Client Portal</Link>
-            ) : role === "freelancer" ? (
-              <Link href="/freelancer/dashboard">Freelancer Portal</Link>
-            ) : (
-              <Link href="/setup">Portal</Link>
-            )}
-            <UserButton />
-          </SignedIn>
-        </div>
-      </div>
-    </>
-  );
+  return <HeaderClient role={role} />;
 }

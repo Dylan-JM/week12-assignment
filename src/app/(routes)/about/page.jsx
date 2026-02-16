@@ -8,7 +8,7 @@ export default function About() {
       />
       <section className="about-hero">
         <h1>About Us</h1>
-        <p>
+        <p className="about-p-tag">
           We are a modern freelance marketplace connecting clients with skilled
           professionals. Businesses can post jobs, set their requirements, and
           receive applications from freelancers ready to deliver high-quality
@@ -23,7 +23,7 @@ export default function About() {
       />
       <section className="about-content">
         <h2>Our Mission</h2>
-        <p>
+        <p className="about-p-tag">
           Our mission is to create a streamlined platform where opportunity
           meets talent. We empower clients to find the right expertise quickly,
           while giving freelancers access to meaningful projects and secure
@@ -38,7 +38,7 @@ export default function About() {
       />
       <section className="about-content">
         <h2>Why We Exist</h2>
-        <p>
+        <p className="about-p-tag">
           Finding reliable freelancers and trustworthy clients shouldn't be
           complicated. We exist to simplify the hiring process, provide a safe
           and transparent workflow, and ensure freelancers get paid for the
