@@ -27,7 +27,8 @@ export default async function clientPage() {
             <div className="client-job-container">
               <h1 className="job-title">{post.title}</h1>
               <p className="job-description">
-                Description : {post.description}
+                <strong>Description : </strong>
+                {post.description}
               </p>
               <div className="specific-jobs-details">
                 <h2 className="job-budget">Budget : £{post.budget}</h2>
@@ -35,10 +36,13 @@ export default async function clientPage() {
                   Deadline: {new Date(post.deadline).toLocaleDateString()}
                 </h2>
 
-                <h2 className="job-category">Category : {post.category}</h2>
+                <h2 className="job-category">
+                  <strong>Category : </strong>
+                  {post.category}
+                </h2>
                 <div>
                   <h2 className="job-skills-required-title">
-                    Skills Required:
+                    <strong>Skills Required:</strong>
                   </h2>
                   <ul>
                     {post.skills_required.map((skill, index) => (

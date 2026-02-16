@@ -20,7 +20,7 @@ export default function clientDashboardPage() {
     {
       title: "Freelancers",
       desc: "Browse all freelancers & find the perfect fit for your job!",
-      href: "/freelancer",
+      href: "/client/findFreelancers",
     },
     {
       title: "Jobs In Progress",

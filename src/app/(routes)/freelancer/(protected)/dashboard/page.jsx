@@ -21,11 +21,6 @@ export default async function clientDashboardPage() {
       href: "/chat",
     },
     {
-      title: "Freelancers",
-      desc: "Browse all freelancers & find the perfect fit for your job!",
-      href: "/freelancer",
-    },
-    {
       title: "Profile",
       desc: "View/Edit your profile & add skills!",
       href: `/freelancer/profile/${userId}`,
