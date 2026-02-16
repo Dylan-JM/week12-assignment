@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useEffect, useState, useCallback } from "react";
+import { Suspense, useMemo, useEffect, useState, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { Realtime } from "ably";
 import { AblyProvider } from "ably/react";
@@ -20,7 +20,18 @@ function getInitialSidebarExpanded() {
   return stored !== "false";
 }
 
-export default function ChatLayout({ children }) {
+function ChatLayoutFallback() {
+  return (
+    <div className="grid h-[calc(100vh-72.8px)] grid-cols-4">
+      <div className="border-r border-gray-200 p-5">Loading…</div>
+      <div className="col-span-3 flex items-center justify-center text-gray-500">
+        Loading…
+      </div>
+    </div>
+  );
+}
+
+function ChatLayoutInner({ children }) {
   const searchParams = useSearchParams();
   const { user, isLoaded } = useUser();
   const [conversations, setConversations] = useState([]);
@@ -210,5 +221,13 @@ export default function ChatLayout({ children }) {
         </div>
       </ChatLayoutContext.Provider>
     </AblyProvider>
+  );
+}
+
+export default function ChatLayout({ children }) {
+  return (
+    <Suspense fallback={<ChatLayoutFallback />}>
+      <ChatLayoutInner>{children}</ChatLayoutInner>
+    </Suspense>
   );
 }
