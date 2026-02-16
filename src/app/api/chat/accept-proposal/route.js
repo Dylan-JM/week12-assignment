@@ -1,5 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
+import { createClerkClient } from "@clerk/nextjs/server";
 import { db } from "@/lib/dbConnection";
+import Ably from "ably";
 
 export const POST = async (request) => {
   const { userId } = await auth();
@@ -74,10 +76,43 @@ export const POST = async (request) => {
     startDate,
     endDate,
   });
-  await db.query(
-    "INSERT INTO fm_messages (conversation_id, sender_id, content) VALUES ($1, $2, $3)",
+  const insertMsg = await db.query(
+    "INSERT INTO fm_messages (conversation_id, sender_id, content) VALUES ($1, $2, $3) RETURNING id",
     [proposal.conversation_id, proposal.sender_id, acceptedContent]
   );
+  const messageId = insertMsg.rows[0].id;
+
+  let avatarUrl = null;
+  try {
+    const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
+    const user = await clerk.users.getUser(proposal.sender_id);
+    avatarUrl = user?.imageUrl ?? null;
+  } catch {
+    // use fallback in UI
+  }
+
+  const channelSlug = "dm-" + [userId, proposal.sender_id].sort().join("-");
+  const channelName = "chat:" + channelSlug;
+  const apiKey = process.env.ABLY_API_KEY || process.env.NEXT_PUBLIC_ABLY_API_KEY;
+  if (apiKey) {
+    try {
+      const rest = new Ably.Rest(apiKey);
+      const channel = rest.channels.get(channelName);
+      await channel.publish("ADD", {
+        id: messageId,
+        text: "Proposal accepted",
+        messageType: "proposal_accepted",
+        acceptedJobId: jobId,
+        jobTitle: job.title || "Job",
+        startDate,
+        endDate,
+        senderId: proposal.sender_id,
+        avatarUrl,
+      });
+    } catch (err) {
+      console.error("Ably publish failed:", err);
+    }
+  }
 
   return Response.json({ ok: true });
 };
