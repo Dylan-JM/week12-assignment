@@ -860,3 +860,62 @@ ul {
   width: 80%;
   margin: 1rem;
 }
+
+/* ----------------------------------------- Responsivness ------------------------------------------ */
+
+.hamburger {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .header {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .hamburger {
+    display: block;
+    align-self: flex-end;
+    font-size: 2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .navbar-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  .navbar-container.open {
+    max-height: 1000px;
+  }
+
+  .navbar-container a,
+  .navbar-container .btn-signin,
+  .navbar-container .UserButton {
+    padding: 0.5rem 0;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 1100px) {
+  .features-grid {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 500px) {
+  .specific-jobs-details {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
