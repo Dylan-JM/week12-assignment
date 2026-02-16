@@ -86,6 +86,7 @@ export const GET = async () => {
         try {
           const parsed = JSON.parse(m.content);
           if (parsed?.type === "proposal" && parsed.text) content = parsed.text;
+          else if (parsed?.type === "proposal_accepted") content = "Proposal accepted";
         } catch {
           // keep raw content
         }
