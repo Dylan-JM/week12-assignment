@@ -21,18 +21,18 @@ export default function JobsClient({id}){
                 <section className='flex flex-col'>
                     <h3 className='text-lg'>Expenses</h3>
                     <button onClick={expenses} className=''>Plus sign</button>
-                    <subsection className='flex flex-col feature-card-container'>
+                    <section className='flex flex-col feature-card-container'>
                         <p className='feature-card'>Expense 1</p>
                         <p className='feature-card'>Expense 2</p>
                         <p className='feature-card'>Expense 3</p>
-                    </subsection>
+                    </section>
                 </section>
                 <section className='flex flex-col'>
                     <h3 className='text-lg'>Income</h3>
                     <button onClick={income} className=''>Plus sign</button>
-                    <subsection className='feature-card-container'>
+                    <section className='feature-card-container'>
                         <p className='feature-card'>Income 1</p>
-                    </subsection>
+                    </section>
                     <JobsChart />
                 </section>
             </section>
