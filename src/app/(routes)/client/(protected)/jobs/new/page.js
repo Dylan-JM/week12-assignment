@@ -80,12 +80,16 @@ export default function NewClientJobPage() {
           <h1 className="client-job-title">Add A Job</h1>
           <form action={handleSubmit} className="client-job-form-contents">
             <div className="client-job-form-group">
-              <label htmlFor="title">Job Title:</label>
+              <label htmlFor="title">
+                <strong>Job Title:</strong>
+              </label>
               <input type="text" name="title" id="title" required />
             </div>
 
             <div className="client-job-form-group">
-              <label htmlFor="description">Description:</label>
+              <label htmlFor="description">
+                <strong>Description:</strong>
+              </label>
               <textarea
                 type="text"
                 name="description"
@@ -96,17 +100,23 @@ export default function NewClientJobPage() {
             </div>
 
             <div className="client-job-form-group">
-              <label htmlFor="budget">Budget:</label>
+              <label htmlFor="budget">
+                <strong>Budget:</strong>
+              </label>
               <input type="number" name="budget" id="budget" required />
             </div>
 
             <div className="client-job-form-group">
-              <label htmlFor="deadline">Deadline:</label>
+              <label htmlFor="deadline">
+                <strong>Deadline:</strong>
+              </label>
               <input type="date" name="deadline" required />
             </div>
 
             <div className="client-job-form-group">
-              <label htmlFor="category">Category :</label>
+              <label htmlFor="category">
+                <strong>Category :</strong>
+              </label>
               <select name="category" id="category" required>
                 <option value="">Select a category</option>
                 {jobCategories.map((category) => (
@@ -118,6 +128,9 @@ export default function NewClientJobPage() {
             </div>
 
             <div className="client-job-form-group">
+              <h1>
+                <strong>Skills Required : </strong>
+              </h1>
               <div className="skills-grid">
                 {skillOptions.map((skill) => (
                   <label key={skill} className="checkbox-label">

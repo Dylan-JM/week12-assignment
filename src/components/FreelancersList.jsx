@@ -75,7 +75,9 @@ export default function FreelancersList({ freelancers }) {
             </h2>
             <ul>
               {freelancer.skills.map((skill, index) => (
-                <li key={index}>{skill}</li>
+                <li className="job-skill" key={index}>
+                  {skill}
+                </li>
               ))}
             </ul>
           </div>
