@@ -860,6 +860,34 @@ ul {
   width: 80%;
   margin: 1rem;
 }
+
+.find-freelancer-message-btn {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.6rem 1.25rem;
+  min-height: 2.5rem;
+  border-radius: 8px;
+  border: 2px solid #1a1a1a;
+  background: #1a1a1a;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.25;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.find-freelancer-message-btn:hover:not(:disabled) {
+  background: #333;
+  border-color: #333;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.find-freelancer-message-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 /* ----------------------------------------- Jobs In Progress ------------------------------------------ */
 
 .jobs-in-progress-title {

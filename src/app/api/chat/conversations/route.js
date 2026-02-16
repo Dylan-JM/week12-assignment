@@ -107,3 +107,49 @@ export const GET = async () => {
   const resolvedRole = clientId ? "client" : freelancerId ? "freelancer" : role;
   return Response.json({ role: resolvedRole, conversations: [], contacts: [] });
 };
+
+export const POST = async (request) => {
+  const { userId } = await auth();
+  if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 });
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return Response.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+  const otherClerkId = body?.otherClerkId ?? body?.freelancerClerkId;
+  if (!otherClerkId || typeof otherClerkId !== "string") {
+    return Response.json({ error: "otherClerkId required" }, { status: 400 });
+  }
+
+  const [clientRow, freelancerRow] = await Promise.all([
+    db.query("SELECT id FROM fm_clients WHERE clerk_id = $1", [userId]),
+    db.query("SELECT id FROM fm_freelancers WHERE clerk_id = $1", [otherClerkId.trim()]),
+  ]);
+  const clientId = clientRow.rows[0]?.id;
+  const freelancerId = freelancerRow.rows[0]?.id;
+
+  if (!clientId) {
+    return Response.json({ error: "Only clients can start conversations with freelancers" }, { status: 403 });
+  }
+  if (!freelancerId) {
+    return Response.json({ error: "Freelancer not found" }, { status: 404 });
+  }
+
+  const existing = await db.query(
+    "SELECT id FROM fm_conversations WHERE client_id = $1 AND freelancer_id = $2",
+    [clientId, freelancerId]
+  );
+  if (existing.rows[0]) {
+    const channelSlug = "dm-" + [userId, otherClerkId.trim()].sort().join("-");
+    return Response.json({ channelSlug });
+  }
+
+  await db.query(
+    "INSERT INTO fm_conversations (client_id, freelancer_id) VALUES ($1, $2)",
+    [clientId, freelancerId]
+  );
+  const channelSlug = "dm-" + [userId, otherClerkId.trim()].sort().join("-");
+  return Response.json({ channelSlug });
+};
