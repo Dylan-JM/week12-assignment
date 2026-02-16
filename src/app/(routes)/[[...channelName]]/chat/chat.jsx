@@ -9,10 +9,11 @@ import { useUser } from "@clerk/nextjs";
 const Chat = ({ channelName, onMessageSent, onMessageReceived }) => {
   const { user, isLoaded } = useUser();
   const [messages, setMessages] = useState([]);
-  const messagesEndRef = useRef(null);
+  const messagesScrollRef = useRef(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const el = messagesScrollRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
   }, [messages.length]);
 
   const channelSlug = channelName?.startsWith("chat:")
@@ -81,13 +82,15 @@ const Chat = ({ channelName, onMessageSent, onMessageReceived }) => {
 
   return (
     <div className={`${styles.root} flex h-full w-full min-w-0 flex-col`}>
-      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto bg-(--chat-messages-bg) p-(--chat-panel-padding)">
+      <div
+        ref={messagesScrollRef}
+        className="flex min-h-0 flex-1 flex-col overflow-y-auto bg-(--chat-messages-bg) p-(--chat-panel-padding)"
+      >
         <MessageList
           messages={messages}
           currentUserId={user?.id}
           onRefetchMessages={refetchMessages}
         />
-        <div ref={messagesEndRef} />
       </div>
       <div className="flex w-full shrink-0 items-center border-t border-(--chat-input-wrap-border) bg-(--chat-input-wrap-bg) p-(--chat-panel-padding)">
         <MessageInput onSubmit={publishMessage} />

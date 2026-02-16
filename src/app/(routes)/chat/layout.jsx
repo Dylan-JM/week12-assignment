@@ -25,12 +25,16 @@ export default function ChatLayout({ children }) {
   const { user, isLoaded } = useUser();
   const [conversations, setConversations] = useState([]);
   const [loadError, setLoadError] = useState(null);
-  const [sidebarExpanded, setSidebarExpanded] = useState(getInitialSidebarExpanded);
+  const [sidebarExpanded, setSidebarExpanded] = useState(
+    getInitialSidebarExpanded,
+  );
   const [selectedChannelSlug, setSelectedChannelSlug] = useState(null);
 
   useEffect(() => {
     const q = searchParams?.get("channel");
-    if (q) setSelectedChannelSlug(q);
+    if (q) {
+      queueMicrotask(() => setSelectedChannelSlug(q));
+    }
   }, [searchParams]);
 
   const handleSelectConversation = useCallback((slug) => {
@@ -80,7 +84,6 @@ export default function ChatLayout({ children }) {
       loadError,
       conversations,
       selectedChannelSlug,
-      setSelectedChannelSlug,
       fetchConversations,
     }),
     [
