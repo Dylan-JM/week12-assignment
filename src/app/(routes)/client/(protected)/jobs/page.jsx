@@ -19,6 +19,14 @@ export default async function clientPage() {
     [rawClientId],
   );
 
+  if (!rows || rows.length === 0) {
+    return (
+      <>
+        <p>No Jobs Found!</p>
+      </>
+    );
+  }
+
   return (
     <>
       <div className="all-client-jobs-container">

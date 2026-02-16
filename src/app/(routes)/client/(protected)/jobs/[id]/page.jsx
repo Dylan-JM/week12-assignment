@@ -82,6 +82,15 @@ export default async function SpecificJobPage({ params }) {
     redirect(`/client/jobs/${id}`);
   }
 
+  async function deleteJob() {
+    "use server";
+
+    await db.query(`DELETE FROM fm_jobs WHERE id = $1`, [id]);
+
+    revalidatePath(`/client/jobs`);
+    redirect(`/client/jobs`);
+  }
+
   const jobCategories = [
     "Web Development",
     "Mobile Development",
@@ -138,6 +147,11 @@ export default async function SpecificJobPage({ params }) {
           action={updateField}
           selectOptions={jobCategories}
         />
+        <form action={deleteJob}>
+          <button type="submit" className="delete-btn">
+            Delete Job
+          </button>
+        </form>
 
         <EditableJobSkills
           skills={job.skills_required || []}
