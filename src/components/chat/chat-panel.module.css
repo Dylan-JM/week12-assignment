@@ -1,0 +1,7 @@
+.root {
+  --chat-panel-padding: 1rem;
+  --chat-input-height: 3.5rem;
+  --chat-messages-bg: rgb(248 250 252);
+  --chat-input-wrap-border: rgb(226 232 240);
+  --chat-input-wrap-bg: white;
+}

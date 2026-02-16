@@ -1,0 +1,40 @@
+.root {
+  --chat-bubble-me-bg: rgb(224 242 254);
+  --chat-bubble-me-border: rgb(147 197 253);
+  --chat-bubble-me-text: rgb(17 24 39);
+
+  --chat-bubble-other-bg: rgb(241 245 249);
+  --chat-bubble-other-border: rgb(226 232 240);
+  --chat-bubble-other-text: rgb(17 24 39);
+
+  --chat-bubble-radius: 1rem;
+  --chat-bubble-radius-me-tr: 0.25rem;
+  --chat-bubble-radius-other-tl: 0.25rem;
+
+  --chat-bubble-max-width: min(92%, 28rem);
+}
+
+@media (min-width: 640px) {
+  .root {
+    --chat-bubble-max-width: min(90%, 36rem);
+  }
+}
+
+@media (min-width: 1024px) {
+  .root {
+    --chat-bubble-max-width: min(85%, 42rem);
+  }
+}
+
+.root {
+  --chat-system-success-bg: rgb(240 253 244);
+  --chat-system-success-border: rgb(187 247 208);
+  --chat-system-success-text: rgb(22 101 52);
+  --chat-system-success-icon-bg: rgb(34 197 94);
+  --chat-system-success-muted: rgb(22 163 74);
+
+  --chat-system-denied-bg: rgb(254 242 242);
+  --chat-system-denied-border: rgb(254 202 202);
+  --chat-system-denied-text: rgb(153 27 27);
+  --chat-system-denied-icon-bg: rgb(239 68 68);
+}
