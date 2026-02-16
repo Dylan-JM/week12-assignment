@@ -2,13 +2,18 @@ import MessageInput from "./message-input";
 import MessageList from "./message-list";
 import styles from "./chat.module.css";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useChannel } from "ably/react";
 import { useUser } from "@clerk/nextjs";
 
 const Chat = ({ channelName, onMessageSent, onMessageReceived }) => {
   const { user, isLoaded } = useUser();
   const [messages, setMessages] = useState([]);
+  const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages.length]);
 
   const channelSlug = channelName?.startsWith("chat:")
     ? channelName.slice(5)
@@ -82,6 +87,7 @@ const Chat = ({ channelName, onMessageSent, onMessageReceived }) => {
           currentUserId={user?.id}
           onRefetchMessages={refetchMessages}
         />
+        <div ref={messagesEndRef} />
       </div>
       <div className="flex w-full shrink-0 items-center border-t border-(--chat-input-wrap-border) bg-(--chat-input-wrap-bg) p-(--chat-panel-padding)">
         <MessageInput onSubmit={publishMessage} />
