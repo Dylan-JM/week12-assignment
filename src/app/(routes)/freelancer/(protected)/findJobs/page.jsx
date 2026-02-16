@@ -2,7 +2,7 @@ import { db } from "@/lib/dbConnection";
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 
-export default async function clientPage() {
+export default async function freelancerFindJobs() {
   const { rows } = await db.query(`SELECT * FROM fm_jobs`);
 
   return (

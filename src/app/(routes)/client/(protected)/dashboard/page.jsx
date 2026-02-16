@@ -27,6 +27,11 @@ export default function clientDashboardPage() {
       desc: "View all your current ongoing Jobs!",
       href: "/client/jobs/inprogress",
     },
+    {
+      title: "See All Jobs",
+      desc: "Find other clients jobs & see what's going on!",
+      href: "/client/findJobs",
+    },
   ];
 
   return (
