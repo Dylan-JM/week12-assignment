@@ -27,13 +27,18 @@ export default function ContactForm() {
         <label className="form-email" htmlFor="email">
           Email:{" "}
         </label>
-        <input className='bg-yellow-50' id="form-email" type="text" name="email" />
+        <input
+          className="contact-us-input"
+          id="form-email"
+          type="text"
+          name="email"
+        />
 
         <label className="form-content" htmlFor="content">
           Content:{" "}
         </label>
         <textarea
-          className='' 
+          className="contact-us-textarea"
           id="form-content"
           type="text"
           name="content"
@@ -41,7 +46,7 @@ export default function ContactForm() {
           cols="30"
         />
 
-        <button>Submit</button>
+        <button className="submit-btn">Submit</button>
       </form>
     </div>
   );
