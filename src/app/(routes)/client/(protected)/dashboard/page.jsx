@@ -14,8 +14,8 @@ export default function clientDashboardPage() {
     },
     {
       title: "Inbox",
-      desc: "Manage your messages!",
-      href: "/",
+      desc: "Message freelancers!",
+      href: "/chat",
     },
     {
       title: "Freelancers",

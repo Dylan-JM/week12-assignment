@@ -3,21 +3,7 @@ import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 
 export default async function clientPage() {
-  const { userId } = await auth();
-
-  console.log(userId);
-
-  const { rows: client_id } = await db.query(
-    `SELECT id FROM fm_clients WHERE clerk_id = $1`,
-    [userId],
-  );
-
-  const rawClientId = client_id[0].id;
-
-  const { rows } = await db.query(
-    `SELECT * FROM fm_jobs WHERE client_id = $1`,
-    [rawClientId],
-  );
+  const { rows } = await db.query(`SELECT * FROM fm_jobs`);
 
   return (
     <>

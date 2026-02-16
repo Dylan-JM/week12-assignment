@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { auth } from "@clerk/nextjs/server";
 
-export default function clientDashboardPage() {
+export default async function clientDashboardPage() {
+  const { userId } = await auth();
+
   const features = [
     {
       title: "Active Jobs",
@@ -14,8 +17,8 @@ export default function clientDashboardPage() {
     },
     {
       title: "Inbox",
-      desc: "Manage your messages!",
-      href: "/",
+      desc: "Message clients!",
+      href: "/chat",
     },
     {
       title: "Freelancers",
@@ -24,8 +27,13 @@ export default function clientDashboardPage() {
     },
     {
       title: "Profile",
-      desc: "View/Edit your profile & skills!",
-      href: "/freelancer/profile",
+      desc: "View/Edit your profile & add skills!",
+      href: `/freelancer/profile/${userId}`,
+    },
+    {
+      title: "Find Jobs",
+      desc: "Find & Apply For Jobs",
+      href: `/freelancer/findJobs`,
     },
   ];
 
