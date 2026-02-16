@@ -1,74 +1,63 @@
 import MessageInput from "./message-input";
 import MessageList from "./message-list";
 
-import { useReducer, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useChannel } from "ably/react";
 import { useUser } from "@clerk/nextjs";
 
-const ADD = "ADD";
-const SET = "SET";
-
-const reducer = (prev, event) => {
-  if (event.name === SET) {
-    return event.data ?? prev;
-  }
-  if (event.name === ADD) {
-    return [...prev, event];
-  }
-  return prev;
-};
-
 const Chat = ({ channelName, onMessageSent, onMessageReceived }) => {
   const { user, isLoaded } = useUser();
-  const [messages, dispatch] = useReducer(reducer, []);
-  const handleChannelMessage = useCallback(
-    (event) => {
-      dispatch(event);
-      if (event.name === ADD) onMessageReceived?.();
-    },
-    [onMessageReceived]
-  );
-  const { channel, publish } = useChannel(channelName, handleChannelMessage);
+  const [messages, setMessages] = useState([]);
 
   const channelSlug = channelName?.startsWith("chat:") ? channelName.slice(5) : channelName;
 
-  useEffect(() => {
+  const refetchMessages = useCallback(() => {
     if (!channelSlug) return;
     fetch(`/api/chat/messages?channel=${encodeURIComponent(channelSlug)}`)
       .then((r) => r.json())
-      .then((data) => {
-        if (data.messages?.length) {
-          dispatch({ name: SET, data: data.messages });
-        }
-      })
+      .then((data) => setMessages(data.messages ?? []))
       .catch(() => {});
   }, [channelSlug]);
+
+  useEffect(() => {
+    if (!channelSlug) return;
+    refetchMessages();
+  }, [channelSlug, refetchMessages]);
+
+  function handleNewMessage(event) {
+    const data = event.data || event;
+    const id = data.id ?? event.id ?? `live-${Date.now()}`;
+    const msg = { id, name: event.name || "ADD", data: typeof data.data !== "undefined" ? data : { ...data } };
+    setMessages((prev) => [...prev, msg]);
+    if (onMessageReceived) onMessageReceived();
+  }
+  const { publish } = useChannel(channelName, handleNewMessage);
 
   if (!isLoaded || !user) {
     return null;
   }
 
-  const publishMessage = (text) => {
-    const payload = {
-      name: ADD,
-      data: { text, avatarUrl: user.imageUrl },
-    };
+  function publishMessage(text) {
     fetch("/api/chat/messages", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ channel: channelSlug, content: text }),
     })
       .then((res) => {
-        if (res.ok) onMessageSent?.();
+        if (res.ok && onMessageSent) onMessageSent();
       })
       .catch(() => {});
-    publish(payload);
-  };
+    publish({ name: "ADD", data: { text, avatarUrl: user.imageUrl } });
+  }
 
   return (
     <>
       <div className="overflow-y-auto p-5">
-        <MessageList messages={messages} currentUserId={user?.id} />
+        <MessageList
+          messages={messages}
+          currentUserId={user?.id}
+          onRefetchMessages={refetchMessages}
+        />
       </div>
       <div className="mt-auto p-5">
         <MessageInput onSubmit={publishMessage} />

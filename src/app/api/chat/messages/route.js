@@ -60,11 +60,29 @@ export const GET = async (request) => {
     const sid = String(m.sender_id ?? "").trim();
     let text = m.content;
     let proposalJobId = null;
+    let messageType = null;
+    let acceptedJobId = null;
+    let deniedJobId = null;
+    let jobTitle = null;
+    let startDate = null;
+    let endDate = null;
     try {
       const parsed = JSON.parse(m.content);
       if (parsed && parsed.type === "proposal") {
         text = parsed.text ?? m.content;
         proposalJobId = parsed.jobId ?? null;
+        messageType = "proposal";
+      } else if (parsed && parsed.type === "proposal_accepted") {
+        text = parsed.text ?? "Proposal accepted";
+        messageType = "proposal_accepted";
+        acceptedJobId = parsed.jobId ?? null;
+        jobTitle = parsed.jobTitle ?? null;
+        startDate = parsed.startDate ?? null;
+        endDate = parsed.endDate ?? null;
+      } else if (parsed && parsed.type === "proposal_denied") {
+        text = parsed.text ?? "Proposal denied";
+        messageType = "proposal_denied";
+        deniedJobId = parsed.jobId ?? null;
       }
     } catch {
       // plain text message
@@ -72,7 +90,18 @@ export const GET = async (request) => {
     return {
       id: m.id,
       name: "ADD",
-      data: { text, proposalJobId, avatarUrl: avatars[sid] ?? null, senderId: sid },
+      data: {
+        text,
+        proposalJobId,
+        messageType,
+        acceptedJobId,
+        deniedJobId,
+        jobTitle,
+        startDate,
+        endDate,
+        avatarUrl: avatars[sid] ?? null,
+        senderId: sid,
+      },
       timestamp: m.created_at,
     };
   });

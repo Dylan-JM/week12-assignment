@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function ProposalForm({ jobId }) {
+export default function ProposalForm({ jobId, alreadyProposed = false }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -35,13 +35,23 @@ export default function ProposalForm({ jobId }) {
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="rounded-md bg-[rgb(0,153,255)] px-4 py-2 text-sm font-medium text-white hover:opacity-90"
-      >
-        Create proposal
-      </button>
+      <div className="flex flex-col gap-1">
+        <button
+          type="button"
+          onClick={() => !alreadyProposed && setOpen(true)}
+          disabled={alreadyProposed}
+          className={`rounded-md px-4 py-2 text-sm font-medium ${
+            alreadyProposed
+              ? "cursor-not-allowed bg-gray-300 text-gray-500"
+              : "bg-[rgb(0,153,255)] text-white hover:opacity-90"
+          }`}
+        >
+          Create proposal
+        </button>
+        {alreadyProposed && (
+          <p className="text-xs text-gray-500">Already made a proposal</p>
+        )}
+      </div>
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
