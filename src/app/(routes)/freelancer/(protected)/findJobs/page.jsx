@@ -3,7 +3,12 @@ import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 
 export default async function freelancerFindJobs() {
-  const { rows } = await db.query(`SELECT * FROM fm_jobs`);
+  const { rows } = await db.query(
+    `SELECT * FROM fm_jobs j
+     WHERE NOT EXISTS (
+       SELECT 1 FROM fm_contracts c WHERE c.job_id = j.id AND c.status = 'active'
+     )`
+  );
 
   return (
     <>
