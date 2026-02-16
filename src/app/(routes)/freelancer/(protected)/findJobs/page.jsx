@@ -9,7 +9,7 @@ export default async function clientPage() {
     <>
       <div className="all-client-jobs-container">
         {rows.map((post) => (
-          <Link href={`/client/jobs/${post.id}`} key={post.id}>
+          <Link href={`/freelancer/findJobs/${post.id}`} key={post.id}>
             <div className="client-job-container">
               <h1 className="job-title">{post.title}</h1>
               <p className="job-description">

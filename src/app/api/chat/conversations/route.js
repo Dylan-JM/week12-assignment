@@ -34,7 +34,6 @@ export const GET = async () => {
   const freelancerId = freelancerRow.rows[0]?.id;
 
   let conversations = [];
-  let contacts = [];
 
   if (clientId) {
     const { rows } = await db.query(
@@ -49,15 +48,6 @@ export const GET = async () => {
       channelSlug: "dm-" + [r.other_clerk_id, userId].sort().join("-"),
       otherParty: { clerkId: r.other_clerk_id, name: r.other_name },
     }));
-    const { rows: contactRows } = await db.query(
-      "SELECT clerk_id, name FROM fm_freelancers WHERE clerk_id != $1",
-      [userId]
-    );
-    contacts = contactRows.length
-      ? contactRows.map((r) => ({ clerkId: r.clerk_id, name: r.name || "Freelancer" }))
-      : (await db.query("SELECT clerk_id FROM fm_users WHERE role = 'freelancer' AND clerk_id != $1", [userId])).rows.map(
-          (r) => ({ clerkId: r.clerk_id, name: "Freelancer" })
-        );
   } else if (freelancerId) {
     const { rows } = await db.query(
       `SELECT c.id, cl.clerk_id AS other_clerk_id, cl.name AS other_name
@@ -71,34 +61,13 @@ export const GET = async () => {
       channelSlug: "dm-" + [r.other_clerk_id, userId].sort().join("-"),
       otherParty: { clerkId: r.other_clerk_id, name: r.other_name },
     }));
-    const { rows: contactRows } = await db.query(
-      "SELECT clerk_id, name FROM fm_clients WHERE clerk_id != $1",
-      [userId]
-    );
-    contacts = contactRows.length
-      ? contactRows.map((r) => ({ clerkId: r.clerk_id, name: r.name || "Client" }))
-      : (await db.query("SELECT clerk_id FROM fm_users WHERE role = 'client' AND clerk_id != $1", [userId])).rows.map(
-          (r) => ({ clerkId: r.clerk_id, name: "Client" })
-        );
-  } else if (role) {
-    const opposite = role === "client" ? "freelancer" : "client";
-    const label = role === "client" ? "Freelancer" : "Client";
-    const { rows } = await db.query(
-      "SELECT clerk_id FROM fm_users WHERE role = $1 AND clerk_id != $2",
-      [opposite, userId]
-    );
-    contacts = rows.map((r) => ({ clerkId: r.clerk_id, name: label }));
   }
 
   const allClerkIds = [
-    ...new Set([
-      ...contacts.map((c) => c.clerkId),
-      ...conversations.map((c) => c.otherParty?.clerkId).filter(Boolean),
-    ]),
+    ...new Set(conversations.map((c) => c.otherParty?.clerkId).filter(Boolean)),
   ];
   const avatars = await fetchAvatarUrls(allClerkIds);
 
-  const contactsWithAvatar = contacts.map((c) => ({ ...c, imageUrl: avatars[c.clerkId] ?? null }));
   const convsWithAvatar = conversations.map((c) => ({
     ...c,
     otherParty: { ...c.otherParty, imageUrl: avatars[c.otherParty?.clerkId] ?? null },
@@ -112,18 +81,27 @@ export const GET = async () => {
       [convsWithAvatar.map((c) => c.id)]
     );
     const lastByConv = Object.fromEntries(
-      lastRows.map((m) => [
-        m.conversation_id,
-        { content: m.content, createdAt: m.created_at, senderId: m.sender_id },
-      ])
+      lastRows.map((m) => {
+        let content = m.content;
+        try {
+          const parsed = JSON.parse(m.content);
+          if (parsed?.type === "proposal" && parsed.text) content = parsed.text;
+        } catch {
+          // keep raw content
+        }
+        return [
+          m.conversation_id,
+          { content, createdAt: m.created_at, senderId: m.sender_id },
+        ];
+      })
     );
     const convsWithLast = convsWithAvatar.map((c) => ({
       ...c,
       lastMessage: lastByConv[c.id] ?? null,
     }));
-    return Response.json({ role, conversations: convsWithLast, contacts: contactsWithAvatar });
+    return Response.json({ role, conversations: convsWithLast, contacts: [] });
   }
 
   const resolvedRole = clientId ? "client" : freelancerId ? "freelancer" : role;
-  return Response.json({ role: resolvedRole, conversations: [], contacts: contactsWithAvatar });
+  return Response.json({ role: resolvedRole, conversations: [], contacts: [] });
 };

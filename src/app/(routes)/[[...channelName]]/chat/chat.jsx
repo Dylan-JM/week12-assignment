@@ -68,7 +68,7 @@ const Chat = ({ channelName, onMessageSent, onMessageReceived }) => {
   return (
     <>
       <div className="overflow-y-auto p-5">
-        <MessageList messages={messages} />
+        <MessageList messages={messages} currentUserId={user?.id} />
       </div>
       <div className="mt-auto p-5">
         <MessageInput onSubmit={publishMessage} />

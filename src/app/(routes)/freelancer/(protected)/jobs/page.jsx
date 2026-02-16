@@ -40,7 +40,7 @@ export default async function FreelancerJobsPage() {
     <div className="all-client-jobs-container">
       <h1>Jobs</h1>
       {jobs.map((job) => (
-        <Link href={`/client/jobs/${job.id}`} key={job.id}>
+        <Link href={`/freelancer/jobs/${job.id}`} key={job.id}>
           <div className="client-job-container">
             <h1 className="job-title">{job.title}</h1>
             <p className="job-description">Description : {job.description}</p>

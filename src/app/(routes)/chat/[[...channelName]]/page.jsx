@@ -11,8 +11,6 @@ const Page = ({ params }) => {
   const resolvedParams = use(params);
   const { user, isLoaded } = useUser();
   const [conversations, setConversations] = useState([]);
-  const [contacts, setContacts] = useState([]);
-  const [role, setRole] = useState(null);
   const [loadError, setLoadError] = useState(null);
 
   const channelSlug = Array.isArray(resolvedParams?.channelName)
@@ -29,9 +27,7 @@ const Page = ({ params }) => {
         return res.json();
       })
       .then((data) => {
-        setRole(data.role);
         setConversations(data.conversations ?? []);
-        setContacts(data.contacts ?? []);
       })
       .catch((err) => {
         if (!silent) setLoadError(err.message);
@@ -86,9 +82,7 @@ const Page = ({ params }) => {
           </h2>
           <ConversationList
             conversations={conversations}
-            contacts={contacts}
             currentUserId={user.id}
-            role={role}
             basePath="/chat"
           />
         </aside>

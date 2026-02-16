@@ -58,10 +58,21 @@ export const GET = async (request) => {
 
   const messages = rows.map((m) => {
     const sid = String(m.sender_id ?? "").trim();
+    let text = m.content;
+    let proposalJobId = null;
+    try {
+      const parsed = JSON.parse(m.content);
+      if (parsed && parsed.type === "proposal") {
+        text = parsed.text ?? m.content;
+        proposalJobId = parsed.jobId ?? null;
+      }
+    } catch {
+      // plain text message
+    }
     return {
       id: m.id,
       name: "ADD",
-      data: { text: m.content, avatarUrl: avatars[sid] ?? null, senderId: sid },
+      data: { text, proposalJobId, avatarUrl: avatars[sid] ?? null, senderId: sid },
       timestamp: m.created_at,
     };
   });
