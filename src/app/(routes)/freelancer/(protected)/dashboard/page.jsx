@@ -30,6 +30,11 @@ export default async function clientDashboardPage() {
       desc: "View/Edit your profile & add skills!",
       href: `/freelancer/profile/${userId}`,
     },
+    {
+      title: "Find Jobs",
+      desc: "Find & Apply For Jobs",
+      href: `/freelancer/findJobs`,
+    },
   ];
 
   return (
