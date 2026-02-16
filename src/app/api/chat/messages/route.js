@@ -62,6 +62,7 @@ export const GET = async (request) => {
     let proposalJobId = null;
     let messageType = null;
     let acceptedJobId = null;
+    let deniedJobId = null;
     let jobTitle = null;
     let startDate = null;
     let endDate = null;
@@ -78,6 +79,10 @@ export const GET = async (request) => {
         jobTitle = parsed.jobTitle ?? null;
         startDate = parsed.startDate ?? null;
         endDate = parsed.endDate ?? null;
+      } else if (parsed && parsed.type === "proposal_denied") {
+        text = parsed.text ?? "Proposal denied";
+        messageType = "proposal_denied";
+        deniedJobId = parsed.jobId ?? null;
       }
     } catch {
       // plain text message
@@ -90,6 +95,7 @@ export const GET = async (request) => {
         proposalJobId,
         messageType,
         acceptedJobId,
+        deniedJobId,
         jobTitle,
         startDate,
         endDate,
