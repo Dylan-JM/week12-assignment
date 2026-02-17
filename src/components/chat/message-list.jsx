@@ -162,7 +162,7 @@ const MessageList = ({ messages, currentUserId, onRefetchMessages }) => {
             >
               {isFile ? (
                 <a
-                  href={message.data.fileUrl}
+                  href={`/api/chat/file?messageId=${message.id}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="underline hover:opacity-80"

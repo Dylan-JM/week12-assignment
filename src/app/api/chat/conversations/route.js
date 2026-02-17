@@ -7,9 +7,13 @@ async function fetchAvatarUrls(clerkIds) {
   const ids = [...new Set(clerkIds.filter(Boolean))];
   if (!ids.length) return {};
   try {
-    const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
+    const clerk = createClerkClient({
+      secretKey: process.env.CLERK_SECRET_KEY,
+    });
     const results = await Promise.allSettled(
-      ids.map((id) => clerk.users.getUser(id).then((u) => ({ id, url: u.imageUrl })))
+      ids.map((id) =>
+        clerk.users.getUser(id).then((u) => ({ id, url: u.imageUrl })),
+      ),
     );
     const map = {};
     results.forEach((r, i) => {
@@ -44,7 +48,7 @@ export const GET = async () => {
        FROM fm_conversations c
        JOIN fm_freelancers f ON f.id = c.freelancer_id
        WHERE c.client_id = $1 ORDER BY c.created_at DESC`,
-      [clientId]
+      [clientId],
     );
     conversations = rows.map((r) => ({
       id: r.id,
@@ -58,7 +62,7 @@ export const GET = async () => {
        FROM fm_conversations c
        JOIN fm_clients cl ON cl.id = c.client_id
        WHERE c.freelancer_id = $1 ORDER BY c.created_at DESC`,
-      [freelancerId]
+      [freelancerId],
     );
     conversations = rows.map((r) => ({
       id: r.id,
@@ -74,7 +78,10 @@ export const GET = async () => {
 
   const convsWithAvatar = conversations.map((c) => ({
     ...c,
-    otherParty: { ...c.otherParty, imageUrl: avatars[c.otherParty?.clerkId] ?? null },
+    otherParty: {
+      ...c.otherParty,
+      imageUrl: avatars[c.otherParty?.clerkId] ?? null,
+    },
   }));
 
   if (convsWithAvatar.length > 0) {
@@ -83,7 +90,7 @@ export const GET = async () => {
       `SELECT DISTINCT ON (conversation_id) conversation_id, content, sender_id, created_at
        FROM fm_messages WHERE conversation_id = ANY($1::uuid[])
        ORDER BY conversation_id, created_at DESC`,
-      [convsWithAvatar.map((c) => c.id)]
+      [convsWithAvatar.map((c) => c.id)],
     );
     const lastByConv = Object.fromEntries(
       lastRows.map((m) => {
@@ -91,8 +98,12 @@ export const GET = async () => {
         try {
           const parsed = JSON.parse(m.content);
           if (parsed?.type === "proposal" && parsed.text) content = parsed.text;
-          else if (parsed?.type === "proposal_accepted") content = "Proposal accepted";
-          else if (parsed?.type === "proposal_denied") content = "Proposal denied";
+          else if (parsed?.type === "proposal_accepted")
+            content = "Proposal accepted";
+          else if (parsed?.type === "proposal_denied")
+            content = "Proposal denied";
+          else if (parsed?.type === "file")
+            content = parsed.fileName ? `${parsed.fileName}` : "PDF";
         } catch {
           // keep raw content
         }
@@ -100,7 +111,7 @@ export const GET = async () => {
           m.conversation_id,
           { content, createdAt: m.created_at, senderId: m.sender_id },
         ];
-      })
+      }),
     );
     const convsWithLast = convsWithAvatar.map((c) => ({
       ...c,
@@ -131,13 +142,18 @@ export const POST = async (request) => {
   // Resolve client (caller) and freelancer (other party) ids.
   const [clientRow, freelancerRow] = await Promise.all([
     db.query(`SELECT id FROM fm_clients WHERE clerk_id = $1`, [userId]),
-    db.query(`SELECT id FROM fm_freelancers WHERE clerk_id = $1`, [otherClerkId.trim()]),
+    db.query(`SELECT id FROM fm_freelancers WHERE clerk_id = $1`, [
+      otherClerkId.trim(),
+    ]),
   ]);
   const clientId = clientRow.rows[0]?.id;
   const freelancerId = freelancerRow.rows[0]?.id;
 
   if (!clientId) {
-    return Response.json({ error: "Only clients can start conversations with freelancers" }, { status: 403 });
+    return Response.json(
+      { error: "Only clients can start conversations with freelancers" },
+      { status: 403 },
+    );
   }
   if (!freelancerId) {
     return Response.json({ error: "Freelancer not found" }, { status: 404 });

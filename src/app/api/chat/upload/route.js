@@ -51,20 +51,28 @@ export const POST = async (request) => {
   const clerkIds = parseChannelSlug(channel);
   const conversationId = await getOrCreateConversationId(clerkIds);
 
+  if (!supabase) {
+    return Response.json(
+      { error: "Storage not configured. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY." },
+      { status: 503 },
+    );
+  }
+
+  const bucket = BUCKET || "invoices";
   const fileName = (file.name || "document.pdf").replace(
     /[^a-zA-Z0-9._-]/g,
     "_",
   );
   const path = `${conversationId}/${Date.now()}-${fileName}`;
   const buffer = Buffer.from(await file.arrayBuffer());
-  await supabase.storage.from(BUCKET).upload(path, buffer, {
+  await supabase.storage.from(bucket).upload(path, buffer, {
     contentType: "application/pdf",
     upsert: false,
   });
-  const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(path);
+  const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(path);
   const fileUrl = urlData?.publicUrl ?? null;
 
-  const content = JSON.stringify({ type: "file", fileUrl, fileName });
+  const content = JSON.stringify({ type: "file", fileUrl, fileName, path });
   // Insert file message.
   const msgRow = await db.query(
     `INSERT INTO fm_messages (conversation_id, sender_id, content) VALUES ($1, $2, $3) RETURNING id`,
