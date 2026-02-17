@@ -8,7 +8,6 @@ const createToken = (clientId, apiKey, claim, capability) => {
     "x-ably-capability": JSON.stringify(capability),
     "x-ably-clientId": clientId,
     "ably.channel.*": JSON.stringify(claim),
-    // 'ably.limits.publish.perAttachment.maxRate.chat': 0.1,
   })
     .setProtectedHeader({ kid: appId, alg: "HS256" })
     .setIssuedAt()
@@ -29,7 +28,6 @@ export const GET = async () => {
 
   const apiKey = process.env.NEXT_PUBLIC_ABLY_API_KEY;
   if (!apiKey) {
-    console.error("NEXT_PUBLIC_ABLY_API_KEY is not set.");
     return Response.json(
       { error: "Server misconfiguration: Ably key missing" },
       { status: 503 },
