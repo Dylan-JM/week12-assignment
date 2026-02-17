@@ -7,23 +7,23 @@ export default async function JobsId({ params }) {
       id
     ]);
     // console.log({id});
-    console.log({incomeRows});
+    // console.log({incomeRows});
     const income = [];
     for (let i=0;i<incomeRows.length;i++){
         income.push(incomeRows[i].amount);
     }
-    console.log(income);
+    // console.log(income);
 
     let {rows: expenseRows} = await db.query(`SELECT * FROM fm_expenses WHERE job_id = $1`,[
       id
     ]);
     // console.log({id});
-    console.log({expenseRows});
+    // console.log({expenseRows});
     const expenses = [];
     for (let i=0;i<expenseRows.length;i++){
-        expenses.push(expenseRows[i].amount);
+        expenses.push(expenseRows[i].price);
     }
-    console.log(expenses);
+    // console.log(expenses);
 
   return (
     <JobsClient id = {id} income={income} expenses={expenses} /> 
