@@ -36,7 +36,8 @@ export default function FreelancersList({ freelancers }) {
         body: JSON.stringify({ otherClerkId: freelancer.clerk_id }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to start conversation");
+      if (!res.ok)
+        throw new Error(data.error || "Failed to start conversation");
       if (data.channelSlug) {
         router.push(`/chat?channel=${encodeURIComponent(data.channelSlug)}`);
       }
@@ -94,6 +95,20 @@ export default function FreelancersList({ freelancers }) {
             <h1 className="job-title">Username : {freelancer.name}</h1>
 
             <p className="profile-bio">Bio : {freelancer.bio}</p>
+            <p className="profile-bio">Links:</p>
+            <ol className="profile-links">
+              {freelancer.links?.length > 0 ? (
+                freelancer.links.map((link, index) => (
+                  <li key={index}>
+                    <a href={link} target="_blank" rel="noopener noreferrer">
+                      {link}
+                    </a>
+                  </li>
+                ))
+              ) : (
+                <li>No links added yet.</li>
+              )}
+            </ol>
 
             <h2>
               <strong>Skills:</strong>
@@ -108,7 +123,11 @@ export default function FreelancersList({ freelancers }) {
             <button
               type="button"
               onClick={() => handleMessage(freelancer)}
-              disabled={!user || !freelancer.clerk_id || messageLoadingId === freelancer.id}
+              disabled={
+                !user ||
+                !freelancer.clerk_id ||
+                messageLoadingId === freelancer.id
+              }
               className="find-freelancer-message-btn"
             >
               {messageLoadingId === freelancer.id ? "Opening…" : "Message"}
