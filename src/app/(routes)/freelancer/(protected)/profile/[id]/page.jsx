@@ -134,6 +134,52 @@ export default async function FreelancerProfilePage({ params }) {
     redirect(`/freelancer/profile/${id}`);
   }
 
+  async function handleAddLink(formData) {
+    "use server";
+
+    const newLink = formData.get("link");
+
+    if (!newLink) return;
+
+    const { rows: freelancerRows } = await db.query(
+      `SELECT links FROM fm_freelancers WHERE clerk_id = $1`,
+      [id],
+    );
+
+    const existingLinks = freelancerRows[0]?.links || [];
+    const updatedLinks = Array.from(new Set([...existingLinks, newLink]));
+
+    await db.query(`UPDATE fm_freelancers SET links = $1 WHERE clerk_id = $2`, [
+      JSON.stringify(updatedLinks),
+      id,
+    ]);
+
+    revalidatePath(`/freelancer/profile/${id}`);
+    redirect(`/freelancer/profile/${id}`);
+  }
+
+  async function handleDeleteLink(formData) {
+    "use server";
+
+    const linkToDelete = formData.get("link");
+
+    const { rows: freelancerRows } = await db.query(
+      `SELECT links FROM fm_freelancers WHERE clerk_id = $1`,
+      [id],
+    );
+
+    const existingLinks = freelancerRows[0]?.links || [];
+    const updatedLinks = existingLinks.filter((l) => l !== linkToDelete);
+
+    await db.query(`UPDATE fm_freelancers SET links = $1 WHERE clerk_id = $2`, [
+      JSON.stringify(updatedLinks),
+      id,
+    ]);
+
+    revalidatePath(`/freelancer/profile/${id}`);
+    redirect(`/freelancer/profile/${id}`);
+  }
+
   return (
     <>
       <div className="user-profile-container">
@@ -215,6 +261,45 @@ export default async function FreelancerProfilePage({ params }) {
               Add Skills
             </button>
           </form>
+          <div className="profile-skills-form-contents">
+            <h2 className="profile-username">Links</h2>
+
+            <ul className="profile-links">
+              {freelancerDetails[0]?.links?.length > 0 ? (
+                freelancerDetails[0].links.map((link, index) => (
+                  <li key={index} className="profile-link-item">
+                    <a href={link} target="_blank">
+                      {link}
+                    </a>
+                    <form
+                      action={handleDeleteLink}
+                      style={{ display: "inline-block", marginLeft: "8px" }}
+                    >
+                      <input type="hidden" name="link" value={link} />
+                      <button type="submit" className="delete-link-btn">
+                        🗑️
+                      </button>
+                    </form>
+                  </li>
+                ))
+              ) : (
+                <li>No links added yet.</li>
+              )}
+            </ul>
+
+            <form action={handleAddLink} className="add-link-form">
+              <input
+                type="url"
+                name="link"
+                placeholder="Add a link (https://example.com)"
+                required
+                className="link-input"
+              />
+              <button type="submit" className="submit-btn">
+                Add Link
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </>
