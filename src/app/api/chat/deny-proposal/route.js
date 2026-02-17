@@ -74,7 +74,7 @@ export const POST = async (request) => {
   } catch {}
 
   const channelSlug = "dm-" + [userId, proposal.sender_id].sort().join("-");
-  const apiKey = process.env.ABLY_API_KEY || process.env.NEXT_PUBLIC_ABLY_API_KEY;
+  const apiKey = process.env.NEXT_PUBLIC_ABLY_API_KEY;
   if (apiKey) {
     try {
       await new Ably.Rest(apiKey).channels.get("chat:" + channelSlug).publish("ADD", {

@@ -80,6 +80,23 @@ const Chat = ({ channelName, onMessageSent, onMessageReceived }) => {
     });
   }
 
+  async function handleFileUpload(e) {
+    const file = e.target.files?.[0];
+    if (!file || !channelSlug) return;
+    const form = new FormData();
+    form.set("channel", channelSlug);
+    form.set("file", file);
+    try {
+      const res = await fetch("/api/chat/upload", { method: "POST", body: form });
+      if (res.ok) {
+        refetchMessages();
+        if (onMessageSent) onMessageSent();
+      }
+    } finally {
+      e.target.value = "";
+    }
+  }
+
   return (
     <div className={`${styles.root} flex h-full w-full min-w-0 flex-col`}>
       <div
@@ -92,7 +109,16 @@ const Chat = ({ channelName, onMessageSent, onMessageReceived }) => {
           onRefetchMessages={refetchMessages}
         />
       </div>
-      <div className="flex w-full shrink-0 items-center border-t border-(--chat-input-wrap-border) bg-(--chat-input-wrap-bg) p-(--chat-panel-padding)">
+      <div className="flex w-full shrink-0 items-center gap-2 border-t border-(--chat-input-wrap-border) bg-(--chat-input-wrap-bg) p-(--chat-panel-padding)">
+        <label className="cursor-pointer rounded border px-2 py-2 text-sm hover:bg-gray-100">
+          PDF
+          <input
+            type="file"
+            accept="application/pdf"
+            className="sr-only"
+            onChange={handleFileUpload}
+          />
+        </label>
         <MessageInput onSubmit={publishMessage} />
       </div>
     </div>
