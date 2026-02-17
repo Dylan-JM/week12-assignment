@@ -17,8 +17,11 @@ export default async function SpecificJobPage({ params }) {
   if (jobDetails.length > 0 && userId) {
     const job = jobDetails[0];
     const { rows: proposalRows } = await db.query(
-      `SELECT 1 FROM fm_messages
-       WHERE sender_id = $1 AND content::jsonb->>'type' = 'proposal' AND content::jsonb->>'jobId' = $2
+      `SELECT 1 FROM (
+         SELECT content FROM fm_messages
+         WHERE sender_id = $1 AND content ~ '^\\s*\\{'
+       ) sub
+       WHERE sub.content::jsonb->>'type' = 'proposal' AND sub.content::jsonb->>'jobId' = $2
        LIMIT 1`,
       [userId, job.id]
     );
