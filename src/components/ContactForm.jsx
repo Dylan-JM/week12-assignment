@@ -18,7 +18,7 @@ export default function ContactForm() {
     //         formValues.content
     //     ],
     // );
-    redirect("/contact-success");
+    redirect("/contact/success");
   }
 
   return (
