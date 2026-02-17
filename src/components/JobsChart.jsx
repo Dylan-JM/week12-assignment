@@ -12,18 +12,20 @@ export default function JobsChart({id, income, expenses}) {
   if (!ctx) return;
 
   const incomeNums = income.map(Number);
+  incomeNums.reverse();
   const incomeData = incomeNums.map((value, index) => ({
     x: index + 1,
     y: value
   }));
   const expenseNums = expenses.map(Number);
+  expenseNums.reverse();
   const expenseData = expenseNums.map((value, index) => ({
     x: index + 1,
     y: value
   }));
 
-  console.log("income:", incomeNums);
-  console.log("expenses:", expenseNums);
+//   console.log("income:", incomeNums);
+//   console.log("expenses:", expenseNums);
 
   if (chartInstanceRef.current) {
     chartInstanceRef.current.destroy();
@@ -64,7 +66,7 @@ export default function JobsChart({id, income, expenses}) {
       chartInstanceRef.current.destroy();
     }
   };
-}, [income, expenses]);
+}, []);
 
   return (
     <div className="feature-card">
