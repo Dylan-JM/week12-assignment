@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
 
-export default function JobsChart() {
+export default function JobsChart({id, income, expenses}) {
   const chartRef = useRef(null);
   const chartInstanceRef = useRef(null);
 
@@ -16,13 +16,13 @@ export default function JobsChart() {
     }
 
     chartInstanceRef.current = new Chart(ctx, {
-      type: "bar",
+      type: "line",
       data: {
-        labels: ["A", "B", "C"],
+        // labels: [],
         datasets: [
           {
             label: "Example",
-            data: [10, 20, 30],
+            data: [income, expenses],
             backgroundColor: "rgba(75, 192, 192, 0.5)",
           },
         ],

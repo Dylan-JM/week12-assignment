@@ -3,11 +3,7 @@
 import JobsChart from './JobsChart'
 import Link from 'next/link'
 
-export default function JobsClient({id}){
-
-  async function income() {
-    console.log("Income for job:", id);
-  }
+export default function JobsClient({id, income, expenses}){
 
     return(
         <div className='flex flex-col gap-2'>
@@ -31,7 +27,7 @@ export default function JobsClient({id}){
                     <section className='feature-card-container'>
                         <p className='feature-card'>Income 1</p>
                     </section>
-                    <JobsChart />
+                    <JobsChart id={id} income={income} expenses={expenses}/>
                 </section>
             </section>
         </div>
