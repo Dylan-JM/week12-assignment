@@ -41,7 +41,7 @@ async function getOrCreateConversationId(clerkIds) {
   return insert.rows[0].id;
 }
 
-// Parse message content (plain text or JSON proposal/accepted/denied) into a normalized data object.
+// Parse message content (plain text or JSON proposal/accepted/denied/file) into a normalized data object.
 function parseMessageContent(content) {
   const out = {
     text: content,
@@ -52,6 +52,8 @@ function parseMessageContent(content) {
     jobTitle: null,
     startDate: null,
     endDate: null,
+    fileUrl: null,
+    fileName: null,
   };
   try {
     const p = JSON.parse(content);
@@ -70,6 +72,11 @@ function parseMessageContent(content) {
       out.text = p.text ?? "Proposal denied";
       out.messageType = "proposal_denied";
       out.deniedJobId = p.jobId ?? null;
+    } else if (p?.type === "file") {
+      out.text = p.fileName ?? "File";
+      out.messageType = "file";
+      out.fileUrl = p.fileUrl ?? null;
+      out.fileName = p.fileName ?? null;
     }
   } catch {}
   return out;

@@ -72,6 +72,7 @@ const MessageList = ({ messages, currentUserId, onRefetchMessages }) => {
     const isProposalAccepted =
       message.data?.messageType === "proposal_accepted";
     const isProposalDenied = message.data?.messageType === "proposal_denied";
+    const isFile = message.data?.messageType === "file" && message.data?.fileUrl;
     const isForCurrentUser =
       currentUserId && senderId && senderId !== currentUserId;
     const isAccepting = acceptingId === message.data?.proposalJobId;
@@ -159,7 +160,18 @@ const MessageList = ({ messages, currentUserId, onRefetchMessages }) => {
                   : "rounded-br-sm bg-(--chat-bubble-other-bg) border-(--chat-bubble-other-border) text-(--chat-bubble-other-text)"
               }`}
             >
-              {message.data?.text}
+              {isFile ? (
+                <a
+                  href={message.data.fileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline hover:opacity-80"
+                >
+                  {message.data.fileName || "View PDF"}
+                </a>
+              ) : (
+                message.data?.text
+              )}
               {(message.timestamp ?? message.data?.createdAt) && (
                 <span className="mt-1 block text-xs opacity-75">
                   {formatMessageTime(message.timestamp ?? message.data?.createdAt)}
