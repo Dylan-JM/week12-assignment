@@ -30,6 +30,11 @@ export default async function clientDashboardPage() {
       desc: "Find & Apply For Jobs",
       href: `/freelancer/findJobs`,
     },
+    {
+      title: "AI Assistant",
+      desc: "Nedd Help With Your Jobs!",
+      href: "/freelancer/aiassistant",
+    },
   ];
 
   return (
