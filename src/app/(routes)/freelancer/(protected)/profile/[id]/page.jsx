@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import EditableUsername from "@/components/EditableUsername";
 import Editablebio from "@/components/EditBio";
+import EditableHourlyRate from "@/components/EditableHourlyRate";
 
 export default async function FreelancerProfilePage({ params }) {
   const { id } = await params;
@@ -53,6 +54,11 @@ export default async function FreelancerProfilePage({ params }) {
       : userDetails[0].role === "freelancer"
         ? freelancerDetails[0]?.bio
         : "Unknown";
+
+  const hourly_rate =
+    userDetails[0].role === "freelancer"
+      ? freelancerDetails[0]?.hourly_rate
+      : null;
 
   async function handleSubmit(formData) {
     "use server";
@@ -112,6 +118,22 @@ export default async function FreelancerProfilePage({ params }) {
     redirect(`/freelancer/profile/${id}`);
   }
 
+  async function handleHourlyRateChange(formData) {
+    "use server";
+
+    const hourly_rate = formData.get("hourly_rate");
+
+    await db.query(
+      `UPDATE fm_freelancers
+     SET hourly_rate = $1
+     WHERE clerk_id = $2`,
+      [hourly_rate, id],
+    );
+
+    revalidatePath(`/freelancer/profile/${id}`);
+    redirect(`/freelancer/profile/${id}`);
+  }
+
   return (
     <>
       <div className="user-profile-container">
@@ -124,6 +146,10 @@ export default async function FreelancerProfilePage({ params }) {
             />
             <p className="profile-role">Role: {userDetails[0].role}</p>
             <Editablebio bio={bio} action={handleBioChange} />
+            <EditableHourlyRate
+              hourly_rate={hourly_rate}
+              action={handleHourlyRateChange}
+            />
 
             <ul className="profile-skills" key={id}>
               {freelancerDetails[0]?.skills?.length > 0 ? (
