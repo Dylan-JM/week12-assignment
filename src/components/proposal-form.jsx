@@ -3,12 +3,18 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function ProposalForm({ jobId, alreadyProposed = false }) {
+export default function ProposalForm({
+  jobId,
+  alreadyProposed = false,
+  canApply = true,
+  requiredTier = null,
+}) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const disabledByTier = !canApply && requiredTier;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,10 +44,12 @@ export default function ProposalForm({ jobId, alreadyProposed = false }) {
       <div className="flex flex-col gap-1">
         <button
           type="button"
-          onClick={() => !alreadyProposed && setOpen(true)}
-          disabled={alreadyProposed}
+          onClick={() =>
+            !alreadyProposed && !disabledByTier && setOpen(true)
+          }
+          disabled={alreadyProposed || disabledByTier}
           className={`rounded-md px-4 py-2 text-sm font-medium ${
-            alreadyProposed
+            alreadyProposed || disabledByTier
               ? "cursor-not-allowed bg-gray-300 text-gray-500"
               : "bg-[rgb(0,153,255)] text-white hover:opacity-90"
           }`}
@@ -50,6 +58,11 @@ export default function ProposalForm({ jobId, alreadyProposed = false }) {
         </button>
         {alreadyProposed && (
           <p className="text-xs text-gray-500">Already made a proposal</p>
+        )}
+        {disabledByTier && (
+          <p className="text-xs text-amber-700">
+            Upgrade to {requiredTier} to apply for this job.
+          </p>
         )}
       </div>
 
