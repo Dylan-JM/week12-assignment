@@ -2,10 +2,12 @@ import { db } from "@/lib/dbConnection";
 import Link from "next/link";
 import { Coins, Gem } from "lucide-react";
 import JobSortDropdown from "@/components/job-sort-dropdown";
+import FreelancerSideBar from "@/components/FreelancerSideBar";
 
 export const metadata = {
   title: "Find Jobs",
-  description: "Browse and apply for freelance jobs. Filter by skills and budget on TrueHire.",
+  description:
+    "Browse and apply for freelance jobs. Filter by skills and budget on TrueHire.",
 };
 
 const skillOptions = [
@@ -70,90 +72,93 @@ export default async function freelancerFindJobs({ searchParams }) {
 
   return (
     <>
-      <div className="m-4 freelancer-filter-container">
-        <JobSortDropdown currentSort={sort} />
+      <div className="sidebar-main-container">
+        <FreelancerSideBar />
+        <div className="m-4 freelancer-filter-container">
+          <JobSortDropdown currentSort={sort} />
 
-        <form method="get" className="flex gap-2">
-          {sort && sort !== "latest" && (
-            <input
-              type="hidden"
-              name="sort"
-              value={sort}
-              className="find-freelancer-input"
-            />
-          )}
+          <form method="get" className="flex gap-2">
+            {sort && sort !== "latest" && (
+              <input
+                type="hidden"
+                name="sort"
+                value={sort}
+                className="find-freelancer-input"
+              />
+            )}
 
-          <select
-            name="skills"
-            className="border rounded px-2 py-1 find-freelancer-select"
-            defaultValue={skillsParam || ""}
-          >
-            <option value="">No filter</option>
-            {skillOptions.map((skill) => (
-              <option key={skill} value={skill}>
-                {skill}
-              </option>
-            ))}
-          </select>
-
-          <button type="submit" className="submit-btn">
-            Filter
-          </button>
-        </form>
-      </div>
-
-      <div className="all-client-jobs-container">
-        {rows.map((post) => {
-          const tier = getJobTier(post.budget);
-          return (
-            <Link
-              href={`/freelancer/findJobs/${post.id}`}
-              key={post.id}
-              className="block w-1/2"
+            <select
+              name="skills"
+              className="border rounded px-2 py-1 find-freelancer-select"
+              defaultValue={skillsParam || ""}
             >
-              <div className="client-job-container relative">
-                {tier === "advanced" && (
-                  <div className="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-amber-100 px-2 py-1 text-amber-800">
-                    <Coins className="h-5 w-5" />
-                    <span className="text-sm font-medium">Advanced</span>
-                  </div>
-                )}
-                {tier === "premium" && (
-                  <div className="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-violet-100 px-2 py-1 text-violet-800">
-                    <Gem className="h-5 w-5" />
-                    <span className="text-sm font-medium">Premium</span>
-                  </div>
-                )}
-                <h1 className="job-title pr-32">{post.title}</h1>
-                <p className="job-description">
-                  Description : {post.description}
-                </p>
-                <div className="specific-jobs-details">
-                  <h2 className="job-budget">Budget : £{post.budget}</h2>
-                  <h2 className="job-deadline">
-                    Deadline: {new Date(post.deadline).toLocaleDateString()}
-                  </h2>
-                  <h2 className="job-created">
-                    Posted: {new Date(post.created_at).toLocaleDateString()}
-                  </h2>
-                  <h2 className="job-category">Category : {post.category}</h2>
-                  <div>
-                    <h2 className="job-skills-required-title">
-                      Skills Required:
+              <option value="">No filter</option>
+              {skillOptions.map((skill) => (
+                <option key={skill} value={skill}>
+                  {skill}
+                </option>
+              ))}
+            </select>
+
+            <button type="submit" className="submit-btn">
+              Filter
+            </button>
+          </form>
+        </div>
+
+        <div className="all-client-jobs-container">
+          {rows.map((post) => {
+            const tier = getJobTier(post.budget);
+            return (
+              <Link
+                href={`/freelancer/findJobs/${post.id}`}
+                key={post.id}
+                className="block w-1/2"
+              >
+                <div className="client-job-container relative">
+                  {tier === "advanced" && (
+                    <div className="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-amber-100 px-2 py-1 text-amber-800">
+                      <Coins className="h-5 w-5" />
+                      <span className="text-sm font-medium">Advanced</span>
+                    </div>
+                  )}
+                  {tier === "premium" && (
+                    <div className="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-violet-100 px-2 py-1 text-violet-800">
+                      <Gem className="h-5 w-5" />
+                      <span className="text-sm font-medium">Premium</span>
+                    </div>
+                  )}
+                  <h1 className="job-title pr-32">{post.title}</h1>
+                  <p className="job-description">
+                    Description : {post.description}
+                  </p>
+                  <div className="specific-jobs-details">
+                    <h2 className="job-budget">Budget : £{post.budget}</h2>
+                    <h2 className="job-deadline">
+                      Deadline: {new Date(post.deadline).toLocaleDateString()}
                     </h2>
-                    <ul>
-                      {post.skills_required.map((skill, index) => (
-                        <li className="job-skill" key={index}>
-                          {skill}
-                        </li>
-                      ))}
-                    </ul>
+                    <h2 className="job-created">
+                      Posted: {new Date(post.created_at).toLocaleDateString()}
+                    </h2>
+                    <h2 className="job-category">Category : {post.category}</h2>
+                    <div>
+                      <h2 className="job-skills-required-title">
+                        Skills Required:
+                      </h2>
+                      <ul>
+                        {post.skills_required.map((skill, index) => (
+                          <li className="job-skill" key={index}>
+                            {skill}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Link>
-          );
-        })}
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </>
   );
