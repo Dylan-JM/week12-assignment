@@ -94,7 +94,17 @@ export default async function FreelancerProfilePage({ params }) {
   const freelancerUUID = freelancerDetails[0]?.id;
 
   const { rows: freelancerReviews } = await db.query(
-    `SELECT * FROM fm_reviews WHERE freelancer_id = $1`,
+    `
+  SELECT 
+    r.*,
+    COALESCE(c.name, f.name) AS reviewer_name
+  FROM fm_reviews r
+  LEFT JOIN fm_clients c 
+    ON r.client_id = c.id
+  LEFT JOIN fm_freelancers f 
+    ON r.client_id = f.id
+  WHERE r.freelancer_id = $1
+  `,
     [freelancerUUID],
   );
 
@@ -525,8 +535,13 @@ export default async function FreelancerProfilePage({ params }) {
                       <strong>Rating:</strong> {review.rating} / 5⭐
                     </p>
                     <p>
+                      <strong>User:</strong> {review.reviewer_name ?? "Unknown"}
+                    </p>
+
+                    <p>
                       <strong>Review:</strong> {review.content}
                     </p>
+
                     <p>
                       <small>
                         Created at:{" "}

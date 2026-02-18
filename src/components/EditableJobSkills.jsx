@@ -17,7 +17,7 @@ export default function EditableJobSkills({ skills, addAction, deleteAction }) {
   ];
 
   return (
-    <div className="editable-job-skills">
+    <div className="editable-job-skills m-2 text-xl">
       <h2>
         <strong>Skills Required:</strong>
       </h2>
@@ -25,7 +25,7 @@ export default function EditableJobSkills({ skills, addAction, deleteAction }) {
       <ul>
         {skills.length > 0 ? (
           skills.map((skill, index) => (
-            <li key={index} className="job-skill">
+            <li key={index} className="job-skill  m-2 text-xl">
               {skill}
               <form
                 action={deleteAction}

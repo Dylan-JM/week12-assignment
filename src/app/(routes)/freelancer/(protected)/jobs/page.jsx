@@ -37,8 +37,8 @@ export default async function FreelancerJobsPage() {
   );
 
   return (
-    <div className="all-client-jobs-container">
-      <h1>Jobs</h1>
+    <div className="active-jobs-container">
+      <h1 className="active-jobs-title">Jobs</h1>
       {jobs.map((job) => (
         <Link href={`/freelancer/jobs/${job.id}`} key={job.id}>
           <div className="client-job-container">

@@ -16,6 +16,9 @@ export default function EditableReview({
           <p>
             <strong>Rating:</strong> {review.rating} / 5⭐
           </p>
+          <p>
+            <strong>User:</strong> {review.client_name}
+          </p>
           <p>{review.content}</p>
           <p className="review-date">
             <em>{new Date(review.created_at).toLocaleDateString("en-GB")}</em>

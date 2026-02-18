@@ -41,8 +41,17 @@ export default async function ViewFreelancerPage({ params }) {
   );
 
   const { rows: freelancerReviews } = await db.query(
-    `SELECT * FROM fm_reviews
-      WHERE freelancer_id = $1`,
+    `
+  SELECT 
+    r.*,
+    COALESCE(c.name, f.name) AS reviewer_name
+  FROM fm_reviews r
+  LEFT JOIN fm_clients c 
+    ON r.client_id = c.id
+  LEFT JOIN fm_freelancers f 
+    ON r.client_id = f.id
+  WHERE r.freelancer_id = $1
+  `,
     [id],
   );
 

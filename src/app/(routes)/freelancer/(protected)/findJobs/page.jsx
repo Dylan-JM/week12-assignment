@@ -70,17 +70,22 @@ export default async function freelancerFindJobs({ searchParams }) {
 
   return (
     <>
-      <div className="m-4 flex justify-around items-center">
+      <div className="m-4 freelancer-filter-container">
         <JobSortDropdown currentSort={sort} />
 
         <form method="get" className="flex gap-2">
           {sort && sort !== "latest" && (
-            <input type="hidden" name="sort" value={sort} />
+            <input
+              type="hidden"
+              name="sort"
+              value={sort}
+              className="find-freelancer-input"
+            />
           )}
 
           <select
             name="skills"
-            className="border rounded px-2 py-1"
+            className="border rounded px-2 py-1 find-freelancer-select"
             defaultValue={skillsParam || ""}
           >
             <option value="">No filter</option>
@@ -91,10 +96,7 @@ export default async function freelancerFindJobs({ searchParams }) {
             ))}
           </select>
 
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-3 py-1 rounded"
-          >
+          <button type="submit" className="submit-btn">
             Filter
           </button>
         </form>
@@ -104,7 +106,11 @@ export default async function freelancerFindJobs({ searchParams }) {
         {rows.map((post) => {
           const tier = getJobTier(post.budget);
           return (
-            <Link href={`/freelancer/findJobs/${post.id}`} key={post.id}>
+            <Link
+              href={`/freelancer/findJobs/${post.id}`}
+              key={post.id}
+              className="block w-1/2"
+            >
               <div className="client-job-container relative">
                 {tier === "advanced" && (
                   <div className="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-amber-100 px-2 py-1 text-amber-800">
