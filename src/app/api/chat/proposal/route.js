@@ -82,13 +82,42 @@ export const POST = async (request) => {
   const { start, end, user: clerkUser } = await getPeriodAndUser(userId);
   const period = { start, end };
 
-  // Load job and client clerk id for Ably channel.
+  // Load job (with budget for tier check) and client clerk id for Ably channel.
   const jobRow = await db.query(
-    `SELECT j.id, j.client_id, c.clerk_id AS client_clerk_id FROM fm_jobs j JOIN fm_clients c ON c.id = j.client_id WHERE j.id = $1`,
+    `SELECT j.id, j.client_id, j.budget, c.clerk_id AS client_clerk_id FROM fm_jobs j JOIN fm_clients c ON c.id = j.client_id WHERE j.id = $1`,
     [jobId],
   );
   const job = jobRow.rows[0];
   if (!job) return Response.json({ error: "Job not found" }, { status: 404 });
+
+  const jobTier =
+    (Number(job.budget) || 0) < 250
+      ? "free"
+      : (Number(job.budget) || 0) < 1000
+        ? "advanced"
+        : "premium";
+  const isPro = has({ plan: "pro" });
+  const isAdvanced =
+    has({ plan: "advanced" }) || has({ feature: "25_proposals_month" });
+  const userTier = isPro ? "pro" : isAdvanced ? "advanced" : "free";
+  const canApplyByTier =
+    jobTier === "free" ||
+    (jobTier === "advanced" && (userTier === "advanced" || userTier === "pro")) ||
+    (jobTier === "premium" && userTier === "pro");
+  if (!canApplyByTier) {
+    const required =
+      jobTier === "premium"
+        ? "Pro"
+        : jobTier === "advanced"
+          ? "Advanced"
+          : "Free";
+    return Response.json(
+      {
+        error: `Upgrade to ${required} to apply for this job.`,
+      },
+      { status: 403 },
+    );
+  }
 
   const freelancerRow = await db.query(
     `SELECT id, proposals_made FROM fm_freelancers WHERE clerk_id = $1`,

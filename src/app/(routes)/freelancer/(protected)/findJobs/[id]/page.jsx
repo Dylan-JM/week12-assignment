@@ -11,7 +11,7 @@ function getJobTier(budget) {
 }
 
 export default async function SpecificJobPage({ params }) {
-  const { userId } = await auth();
+  const { userId, has } = await auth();
 
   const { id } = await params;
 
@@ -41,6 +41,23 @@ export default async function SpecificJobPage({ params }) {
       <h1>Job Page</h1>
       {jobDetails.map((job) => {
         const tier = getJobTier(job.budget);
+        const userTier = has({ plan: "pro" })
+          ? "pro"
+          : has({ plan: "advanced" }) || has({ feature: "25_proposals_month" })
+            ? "advanced"
+            : "free";
+        const canApply =
+          tier === "free" ||
+          (tier === "advanced" &&
+            (userTier === "advanced" || userTier === "pro")) ||
+          (tier === "premium" && userTier === "pro");
+        const requiredTier = !canApply
+          ? tier === "premium"
+            ? "Pro"
+            : tier === "advanced"
+              ? "Advanced"
+              : null
+          : null;
         return (
           <div key={job.id} className="relative rounded-lg border p-6">
             {tier === "advanced" && (
@@ -67,7 +84,12 @@ export default async function SpecificJobPage({ params }) {
             <p className="column-info">{job.skills_required}</p>
             <p>${Number(job.budget).toFixed(2)}</p>
             <div className="mt-4">
-              <ProposalForm jobId={job.id} alreadyProposed={alreadyProposed} />
+              <ProposalForm
+                jobId={job.id}
+                alreadyProposed={alreadyProposed}
+                canApply={canApply}
+                requiredTier={requiredTier}
+              />
             </div>
           </div>
         );
