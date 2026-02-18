@@ -2,8 +2,8 @@ import JobsClient from "@/components/JobsClient";
 import {db} from '@/lib/dbConnection'
 
 export default async function JobsId({ params }) {
-  const {id} = await params;
-  let {rows: incomeRows} = await db.query(`SELECT * FROM fm_income WHERE job_id = $1`,[
+    const {id} = await params;
+    let {rows: incomeRows} = await db.query(`SELECT * FROM fm_income WHERE job_id = $1`,[
       id
     ]);
     // console.log({id});
@@ -25,8 +25,8 @@ export default async function JobsId({ params }) {
     }
     // console.log(expenses);
 
-  return (
-    <JobsClient id = {id} income={income} expenses={expenses} /> 
-  )
+    return (
+      <JobsClient id = {id} income={income} expenses={expenses} /> 
+    )
 
 }
