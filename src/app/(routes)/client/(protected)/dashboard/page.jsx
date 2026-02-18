@@ -2,13 +2,14 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Client Dashboard",
-  description: "Manage your jobs, find freelancers, and view jobs in progress on TrueHire.",
+  description:
+    "Manage your jobs, find freelancers, and view jobs in progress on TrueHire.",
 };
 
 export default function clientDashboardPage() {
   const features = [
     {
-      title: "All Jobs",
+      title: "Personal Jobs",
       desc: "A place to view all your jobs!",
       href: "/client/jobs",
     },

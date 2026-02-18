@@ -7,6 +7,7 @@ import EditableUsername from "@/components/EditableUsername";
 import Editablebio from "@/components/EditBio";
 import EditableHourlyRate from "@/components/EditableHourlyRate";
 import { getTierForClerkId, getProfileLimits } from "@/lib/helperFunctions";
+import FreelancerSideBar from "@/components/FreelancerSideBar";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
@@ -41,7 +42,9 @@ export async function generateMetadata({ params }) {
     const bio = c?.bio?.slice(0, 160) ?? "";
     return {
       title: `${name} — Profile`,
-      description: bio ? `${name} on TrueHire. ${bio}` : `View ${name}'s profile on TrueHire.`,
+      description: bio
+        ? `${name} on TrueHire. ${bio}`
+        : `View ${name}'s profile on TrueHire.`,
     };
   }
   return { title: "Profile" };
@@ -330,227 +333,235 @@ export default async function FreelancerProfilePage({ params }) {
 
   return (
     <>
-      <div className="flex w-full justify-center px-4 py-6">
-        <div className="user-profile-container relative w-full max-w-4xl rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div
-            className={`absolute right-4 top-4 z-10 flex items-center gap-1 rounded-full px-2 py-1 text-sm font-medium shadow-sm ring-1 ring-black/5 ${
-              profileTier === "pro"
-                ? "bg-violet-100 text-violet-800"
-                : profileTier === "advanced"
-                  ? "bg-amber-100 text-amber-800"
-                  : "bg-gray-100 text-gray-700"
-            }`}
-          >
-            {profileTier === "pro" ? (
-              <>
-                <Gem className="h-5 w-5" />
-                <span>Pro</span>
-              </>
-            ) : profileTier === "advanced" ? (
-              <>
-                <Coins className="h-5 w-5" />
-                <span>Advanced</span>
-              </>
-            ) : (
-              <span>Free</span>
-            )}
-          </div>
-          <div className="user-details">
-            <div className="profile-skills-form-contents">
-              <EditableUsername
-                username={username}
-                action={handleUsernameChange}
-              />
-              <Editablebio bio={bio} action={handleBioChange} />
-              <EditableHourlyRate
-                hourly_rate={hourly_rate}
-                action={handleHourlyRateChange}
-              />
+      <div className="sidebar-main-container">
+        <FreelancerSideBar />
+        <div className="flex w-full justify-center px-4 py-6">
+          <div className="user-profile-container relative w-full max-w-4xl rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+            <div
+              className={`absolute right-4 top-4 z-10 flex items-center gap-1 rounded-full px-2 py-1 text-sm font-medium shadow-sm ring-1 ring-black/5 ${
+                profileTier === "pro"
+                  ? "bg-violet-100 text-violet-800"
+                  : profileTier === "advanced"
+                    ? "bg-amber-100 text-amber-800"
+                    : "bg-gray-100 text-gray-700"
+              }`}
+            >
+              {profileTier === "pro" ? (
+                <>
+                  <Gem className="h-5 w-5" />
+                  <span>Pro</span>
+                </>
+              ) : profileTier === "advanced" ? (
+                <>
+                  <Coins className="h-5 w-5" />
+                  <span>Advanced</span>
+                </>
+              ) : (
+                <span>Free</span>
+              )}
+            </div>
+            <div className="user-details">
+              <div className="profile-skills-form-contents">
+                <EditableUsername
+                  username={username}
+                  action={handleUsernameChange}
+                />
+                <Editablebio bio={bio} action={handleBioChange} />
+                <EditableHourlyRate
+                  hourly_rate={hourly_rate}
+                  action={handleHourlyRateChange}
+                />
 
-              <ul className="profile-skills" key={id}>
-                {freelancerDetails[0]?.skills?.length > 0 ? (
-                  freelancerDetails[0].skills.map((skill, index) => (
-                    <li className="job-skill" key={index}>
-                      {skill}
-                      {isOwner && (
-                        <form
-                          action={async (formData) => {
-                            "use server";
-                            const { userId } = await auth();
-                            if (userId !== id) {
+                <ul className="profile-skills" key={id}>
+                  {freelancerDetails[0]?.skills?.length > 0 ? (
+                    freelancerDetails[0].skills.map((skill, index) => (
+                      <li className="job-skill" key={index}>
+                        {skill}
+                        {isOwner && (
+                          <form
+                            action={async (formData) => {
+                              "use server";
+                              const { userId } = await auth();
+                              if (userId !== id) {
+                                revalidatePath(`/freelancer/profile/${id}`);
+                                redirect(`/freelancer/profile/${id}`);
+                                return;
+                              }
+                              const skillToDelete = formData.get("skill");
+
+                              const { rows: freelancerRows } = await db.query(
+                                `SELECT skills FROM fm_freelancers WHERE clerk_id = $1`,
+                                [id],
+                              );
+                              const existingSkills =
+                                freelancerRows[0]?.skills || [];
+                              const updatedSkills = existingSkills.filter(
+                                (s) => s !== skillToDelete,
+                              );
+
+                              await db.query(
+                                `UPDATE fm_freelancers SET skills = $1 WHERE clerk_id = $2`,
+                                [JSON.stringify(updatedSkills), id],
+                              );
+
                               revalidatePath(`/freelancer/profile/${id}`);
                               redirect(`/freelancer/profile/${id}`);
-                              return;
-                            }
-                            const skillToDelete = formData.get("skill");
-
-                            const { rows: freelancerRows } = await db.query(
-                              `SELECT skills FROM fm_freelancers WHERE clerk_id = $1`,
-                              [id],
-                            );
-                            const existingSkills =
-                              freelancerRows[0]?.skills || [];
-                            const updatedSkills = existingSkills.filter(
-                              (s) => s !== skillToDelete,
-                            );
-
-                            await db.query(
-                              `UPDATE fm_freelancers SET skills = $1 WHERE clerk_id = $2`,
-                              [JSON.stringify(updatedSkills), id],
-                            );
-
-                            revalidatePath(`/freelancer/profile/${id}`);
-                            redirect(`/freelancer/profile/${id}`);
-                          }}
-                          style={{ display: "inline-block", marginLeft: "8px" }}
-                        >
-                          <input type="hidden" name="skill" value={skill} />
-                          <button type="submit" className="delete-skill-btn">
-                            X
-                          </button>
-                        </form>
-                      )}
-                    </li>
-                  ))
-                ) : (
-                  <li>No skills added yet.</li>
-                )}
-              </ul>
-            </div>
-            <form
-              action={handleSubmit}
-              className="profile-skills-form-contents"
-            >
-              <div className="client-job-form-group">
-                <div className="profile-skills-container">
-                  {skillOptions.map((skill) => (
-                    <div className="skill-add-conatiner" key={skill}>
-                      <label className="checkbox-label">
-                        <input
-                          type="checkbox"
-                          className="profile-skill-input"
-                          name="skills"
-                          value={skill}
-                          disabled={skillsAtLimit}
-                        />
-                        {skill}
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {skillsAtLimit && (
-                <p className="text-sm text-amber-700 mt-1">
-                  Maximum skills reached ({limits?.maxSkills ?? 3}). Upgrade to
-                  Advanced for 10 skills or Pro for unlimited.
-                </p>
-              )}
-              <button
-                className="submit-btn"
-                type="submit"
-                disabled={skillsAtLimit}
-              >
-                Add Skills
-              </button>
-            </form>
-            <div className="profile-skills-form-contents">
-              <h2 className="profile-username">Links</h2>
-
-              <ul className="profile-links">
-                {freelancerDetails[0]?.links?.length > 0 ? (
-                  freelancerDetails[0].links.map((link, index) => (
-                    <li key={index} className="profile-link-item">
-                      <a href={link} target="_blank">
-                        {link}
-                      </a>
-                      {isOwner && (
-                        <form
-                          action={handleDeleteLink}
-                          style={{
-                            display: "inline-block",
-                            marginLeft: "8px",
-                          }}
-                        >
-                          <input type="hidden" name="link" value={link} />
-                          <button type="submit" className="delete-link-btn">
-                            🗑️
-                          </button>
-                        </form>
-                      )}
-                    </li>
-                  ))
-                ) : (
-                  <li>No links added yet.</li>
-                )}
-              </ul>
-
-              {!canAddLinks && isOwner && (
-                <p className="text-sm text-amber-700 mt-1">
-                  Upgrade to Advanced to add up to 3 links, or Pro for 5 links.
-                </p>
-              )}
-              {canAddLinks && (
-                <>
-                  {linksAtLimit && (
-                    <p className="text-sm text-amber-700 mt-1">
-                      Maximum links reached ({limits?.maxLinks}). Upgrade to Pro
-                      for 5 links.
-                    </p>
+                            }}
+                            style={{
+                              display: "inline-block",
+                              marginLeft: "8px",
+                            }}
+                          >
+                            <input type="hidden" name="skill" value={skill} />
+                            <button type="submit" className="delete-skill-btn">
+                              X
+                            </button>
+                          </form>
+                        )}
+                      </li>
+                    ))
+                  ) : (
+                    <li>No skills added yet.</li>
                   )}
-                  <form action={handleAddLink} className="add-link-form">
-                    <input
-                      type="url"
-                      name="link"
-                      placeholder="Add a link (https://example.com)"
-                      required
-                      className="link-input"
-                      disabled={linksAtLimit}
-                    />
-                    <button
-                      type="submit"
-                      className="submit-btn"
-                      disabled={linksAtLimit}
-                    >
-                      Add Link
-                    </button>
-                  </form>
-                </>
-              )}
-            </div>
-            <div className="profile-skills-form-contents">
-              <h2 className="profile-username">Reviews</h2>
-              <h2>Overall Rating:</h2>
-              {overallRating ? (
-                <p>
-                  {overallRating} / 5⭐ ({freelancerReviews.length} reviews)
-                </p>
-              ) : (
-                <p>No rating yet.</p>
-              )}
-              <ul>
-                {freelancerReviews.map((review) => (
-                  <li key={review.id} className="review-container">
-                    <p>
-                      <strong>Rating:</strong> {review.rating} / 5⭐
-                    </p>
-                    <p>
-                      <strong>User:</strong> {review.reviewer_name ?? "Unknown"}
-                    </p>
+                </ul>
+              </div>
+              <form
+                action={handleSubmit}
+                className="profile-skills-form-contents"
+              >
+                <div className="client-job-form-group">
+                  <div className="profile-skills-container">
+                    {skillOptions.map((skill) => (
+                      <div className="skill-add-conatiner" key={skill}>
+                        <label className="checkbox-label">
+                          <input
+                            type="checkbox"
+                            className="profile-skill-input"
+                            name="skills"
+                            value={skill}
+                            disabled={skillsAtLimit}
+                          />
+                          {skill}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
-                    <p>
-                      <strong>Review:</strong> {review.content}
-                    </p>
+                {skillsAtLimit && (
+                  <p className="text-sm text-amber-700 mt-1">
+                    Maximum skills reached ({limits?.maxSkills ?? 3}). Upgrade
+                    to Advanced for 10 skills or Pro for unlimited.
+                  </p>
+                )}
+                <button
+                  className="submit-btn"
+                  type="submit"
+                  disabled={skillsAtLimit}
+                >
+                  Add Skills
+                </button>
+              </form>
+              <div className="profile-skills-form-contents">
+                <h2 className="profile-username">Links</h2>
 
-                    <p>
-                      <small>
-                        Created at:{" "}
-                        {new Date(review.created_at).toLocaleString()}
-                      </small>
-                    </p>
-                  </li>
-                ))}
-              </ul>
+                <ul className="profile-links">
+                  {freelancerDetails[0]?.links?.length > 0 ? (
+                    freelancerDetails[0].links.map((link, index) => (
+                      <li key={index} className="profile-link-item">
+                        <a href={link} target="_blank">
+                          {link}
+                        </a>
+                        {isOwner && (
+                          <form
+                            action={handleDeleteLink}
+                            style={{
+                              display: "inline-block",
+                              marginLeft: "8px",
+                            }}
+                          >
+                            <input type="hidden" name="link" value={link} />
+                            <button type="submit" className="delete-link-btn">
+                              🗑️
+                            </button>
+                          </form>
+                        )}
+                      </li>
+                    ))
+                  ) : (
+                    <li>No links added yet.</li>
+                  )}
+                </ul>
+
+                {!canAddLinks && isOwner && (
+                  <p className="text-sm text-amber-700 mt-1">
+                    Upgrade to Advanced to add up to 3 links, or Pro for 5
+                    links.
+                  </p>
+                )}
+                {canAddLinks && (
+                  <>
+                    {linksAtLimit && (
+                      <p className="text-sm text-amber-700 mt-1">
+                        Maximum links reached ({limits?.maxLinks}). Upgrade to
+                        Pro for 5 links.
+                      </p>
+                    )}
+                    <form action={handleAddLink} className="add-link-form">
+                      <input
+                        type="url"
+                        name="link"
+                        placeholder="Add a link (https://example.com)"
+                        required
+                        className="link-input"
+                        disabled={linksAtLimit}
+                      />
+                      <button
+                        type="submit"
+                        className="submit-btn"
+                        disabled={linksAtLimit}
+                      >
+                        Add Link
+                      </button>
+                    </form>
+                  </>
+                )}
+              </div>
+              <div className="profile-skills-form-contents">
+                <h2 className="profile-username">Reviews</h2>
+                <h2>Overall Rating:</h2>
+                {overallRating ? (
+                  <p>
+                    {overallRating} / 5⭐ ({freelancerReviews.length} reviews)
+                  </p>
+                ) : (
+                  <p>No rating yet.</p>
+                )}
+                <ul>
+                  {freelancerReviews.map((review) => (
+                    <li key={review.id} className="review-container">
+                      <p>
+                        <strong>Rating:</strong> {review.rating} / 5⭐
+                      </p>
+                      <p>
+                        <strong>User:</strong>{" "}
+                        {review.reviewer_name ?? "Unknown"}
+                      </p>
+
+                      <p>
+                        <strong>Review:</strong> {review.content}
+                      </p>
+
+                      <p>
+                        <small>
+                          Created at:{" "}
+                          {new Date(review.created_at).toLocaleString()}
+                        </small>
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </div>

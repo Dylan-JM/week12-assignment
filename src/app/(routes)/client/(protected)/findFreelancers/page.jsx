@@ -1,12 +1,14 @@
 import { db } from "@/lib/dbConnection";
 import { getTierForClerkId } from "@/lib/helperFunctions";
 import FreelancersList from "@/components/FreelancersList";
+import ClientSideBar from "@/components/ClientSideBar";
 
 const TIER_ORDER = { pro: 0, advanced: 1, free: 2 };
 
 export const metadata = {
   title: "Find Freelancers",
-  description: "Browse freelancer profiles, skills, and rates. Find the right talent for your project on TrueHire.",
+  description:
+    "Browse freelancer profiles, skills, and rates. Find the right talent for your project on TrueHire.",
 };
 
 export default async function ClientFindFreelancersPage() {
@@ -27,12 +29,17 @@ export default async function ClientFindFreelancersPage() {
         tier: sortTier,
         _sortOrder: TIER_ORDER[sortTier] ?? TIER_ORDER.free,
       };
-    })
+    }),
   );
 
   const freelancers = freelancersWithTier
     .sort((a, b) => a._sortOrder - b._sortOrder)
     .map(({ _sortOrder, ...f }) => f);
 
-  return <FreelancersList freelancers={freelancers} />;
+  return (
+    <div className="sidebar-main-container">
+      <ClientSideBar />
+      <FreelancersList freelancers={freelancers} />
+    </div>
+  );
 }

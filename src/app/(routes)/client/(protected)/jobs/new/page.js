@@ -2,6 +2,7 @@ import { db } from "@/lib/dbConnection";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
+import ClientSideBar from "@/components/ClientSideBar";
 
 export default function NewClientJobPage() {
   const jobCategories = [
@@ -75,80 +76,83 @@ export default function NewClientJobPage() {
   }
   return (
     <>
-      <div className="client-job-form-container">
-        <div className="client-job-border-card">
-          <h1 className="client-job-title">Add A Job</h1>
-          <form action={handleSubmit} className="client-job-form-contents">
-            <div className="client-job-form-group">
-              <label htmlFor="title">
-                <strong>Job Title:</strong>
-              </label>
-              <input type="text" name="title" id="title" required />
-            </div>
-
-            <div className="client-job-form-group">
-              <label htmlFor="description">
-                <strong>Description:</strong>
-              </label>
-              <textarea
-                type="text"
-                name="description"
-                id="description"
-                rows={4}
-                required
-              />
-            </div>
-
-            <div className="client-job-form-group">
-              <label htmlFor="budget">
-                <strong>Budget:</strong>
-              </label>
-              <input type="number" name="budget" id="budget" required />
-            </div>
-
-            <div className="client-job-form-group">
-              <label htmlFor="deadline">
-                <strong>Deadline:</strong>
-              </label>
-              <input type="date" name="deadline" required />
-            </div>
-
-            <div className="client-job-form-group">
-              <label htmlFor="category">
-                <strong>Category :</strong>
-              </label>
-              <select name="category" id="category" required>
-                <option value="">Select a category</option>
-                {jobCategories.map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="client-job-form-group">
-              <h1>
-                <strong>Skills Required : </strong>
-              </h1>
-              <div className="skills-grid">
-                {skillOptions.map((skill) => (
-                  <label key={skill} className="checkbox-label">
-                    <input
-                      type="checkbox"
-                      name="skills_required"
-                      value={skill}
-                    />
-                    {skill}
-                  </label>
-                ))}
+      <div className="sidebar-main-container">
+        <ClientSideBar />
+        <div className="client-job-form-container">
+          <div className="client-job-border-card">
+            <h1 className="client-job-title">Add A Job</h1>
+            <form action={handleSubmit} className="client-job-form-contents">
+              <div className="client-job-form-group">
+                <label htmlFor="title">
+                  <strong>Job Title:</strong>
+                </label>
+                <input type="text" name="title" id="title" required />
               </div>
-            </div>
 
-            <button className="submit-btn" type="submit">
-              Add Job
-            </button>
-          </form>
+              <div className="client-job-form-group">
+                <label htmlFor="description">
+                  <strong>Description:</strong>
+                </label>
+                <textarea
+                  type="text"
+                  name="description"
+                  id="description"
+                  rows={4}
+                  required
+                />
+              </div>
+
+              <div className="client-job-form-group">
+                <label htmlFor="budget">
+                  <strong>Budget:</strong>
+                </label>
+                <input type="number" name="budget" id="budget" required />
+              </div>
+
+              <div className="client-job-form-group">
+                <label htmlFor="deadline">
+                  <strong>Deadline:</strong>
+                </label>
+                <input type="date" name="deadline" required />
+              </div>
+
+              <div className="client-job-form-group">
+                <label htmlFor="category">
+                  <strong>Category :</strong>
+                </label>
+                <select name="category" id="category" required>
+                  <option value="">Select a category</option>
+                  {jobCategories.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="client-job-form-group">
+                <h1>
+                  <strong>Skills Required : </strong>
+                </h1>
+                <div className="skills-grid">
+                  {skillOptions.map((skill) => (
+                    <label key={skill} className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        name="skills_required"
+                        value={skill}
+                      />
+                      {skill}
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <button className="submit-btn" type="submit">
+                Add Job
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </>
