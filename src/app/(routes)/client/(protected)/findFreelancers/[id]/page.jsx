@@ -95,7 +95,7 @@ export default async function ViewFreelancerPage({ params }) {
             </h2>
             {freelancerDetails.map((freelancer) => (
               <ul key={freelancer.id}>
-                {freelancer.skills.map((skill, index) => (
+                {(freelancer.skills || []).map((skill, index) => (
                   <li className="job-skill" key={`${freelancer.id}-${index}`}>
                     {skill}
                   </li>
@@ -107,7 +107,7 @@ export default async function ViewFreelancerPage({ params }) {
             <h2 className="profile-username">Links</h2>
             {freelancerDetails.map((freelancer) => (
               <ol key={freelancer.id}>
-                {freelancer.links.map((link, index) => (
+                {(freelancer.links || []).map((link, index) => (
                   <li key={`${freelancer.id}-link-${index}`}>
                     <a href={link} target="_blank" rel="noopener noreferrer">
                       {link}
