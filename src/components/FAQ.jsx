@@ -4,9 +4,9 @@ import { useState } from "react";
 
 const faqData = [
   {
-    question: "What is [WebsiteName]?",
+    question: "What is TrueHire?",
     answer:
-      "[WebsiteName] is a freelancer marketplace where professionals can subscribe to create a profile, showcase their services, and connect directly with clients looking to hire.",
+      "TrueHire is a freelancer marketplace where professionals can subscribe to create a profile, showcase their services, and connect directly with clients looking to hire.",
   },
   {
     question: "How does the subscription work?",
@@ -24,9 +24,9 @@ const faqData = [
       "Yes. Freelancers can browse available job posts and message clients to express interest, discuss details, and submit proposals.",
   },
   {
-    question: "Is communication handled through [WebsiteName]?",
+    question: "Is communication handled through TrueHire?",
     answer:
-      "Yes. [WebsiteName] includes built-in messaging so clients and freelancers can communicate securely before agreeing to work together.",
+      "Yes. TrueHire includes built-in messaging so clients and freelancers can communicate securely before agreeing to work together.",
   },
   {
     question: "Is my information secure?",

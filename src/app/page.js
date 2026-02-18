@@ -10,13 +10,14 @@ export const metadata = {
 export default function Home() {
   return (
     <div className="home-page-container">
-      <h1 className="homepage-title">Welcome To WebsiteName</h1>
+      <h1 className="homepage-title">Welcome To TrueHire</h1>
       <h3 className="homepage-message">
-        WebsiteName connects skilled freelancers with clients who are ready to
-        hire. Whether you're a professional looking to showcase your expertise
-        or a business searching for the right talent, our platform makes it
-        simple to connect, communicate, and get work done. Create your profile,
-        explore opportunities, and start building valuable partnerships today.
+        TrueHire connects skilled freelancers with clients who are ready to
+        hire. Whether you&apos;re a professional looking to showcase your
+        expertise or a business searching for the right talent, our platform
+        makes it simple to connect, communicate, and get work done. Create your
+        profile, explore opportunities, and start building valuable partnerships
+        today.
       </h3>
       <h3 className="homepage-features">Features</h3>
       <div className="feature-card-container">
@@ -59,8 +60,8 @@ export default function Home() {
           />
           <h2>Secure In-Platform Messaging</h2>
           <p>
-            Communicate safely within WebsiteName to discuss details, share
-            files, and finalize agreements before starting work.
+            Communicate safely within TrueHire to discuss details, share files,
+            and finalize agreements before starting work.
           </p>
         </div>
       </div>
