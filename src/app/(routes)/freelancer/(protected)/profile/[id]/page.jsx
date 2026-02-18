@@ -48,10 +48,28 @@ export default async function FreelancerProfilePage({ params }) {
   );
 
   const { rows: freelancerDetails } = await db.query(
-    `SELECT * FROM fm_freelancers
-      WHERE clerk_id = $1`,
+    `SELECT * FROM fm_freelancers WHERE clerk_id = $1`,
     [id],
   );
+
+  const freelancerUUID = freelancerDetails[0]?.id;
+
+  const { rows: freelancerReviews } = await db.query(
+    `SELECT * FROM fm_reviews WHERE freelancer_id = $1`,
+    [freelancerUUID],
+  );
+
+  let overallRating = null;
+
+  if (freelancerReviews.length > 0) {
+    const totalPoints = freelancerReviews.reduce(
+      (sum, review) => sum + review.rating,
+      0,
+    );
+    overallRating = (totalPoints / freelancerReviews.length).toFixed(1);
+  }
+
+  console.log(freelancerReviews);
 
   const username =
     userDetails[0].role === "client"
@@ -79,7 +97,9 @@ export default async function FreelancerProfilePage({ params }) {
   const skillsAtLimit =
     limits != null && currentSkillsCount >= limits.maxSkills;
   const linksAtLimit =
-    limits != null && limits.maxLinks > 0 && currentLinksCount >= limits.maxLinks;
+    limits != null &&
+    limits.maxLinks > 0 &&
+    currentLinksCount >= limits.maxLinks;
   const canAddLinks = limits != null && limits.maxLinks > 0;
 
   async function handleSubmit(formData) {
@@ -304,42 +324,42 @@ export default async function FreelancerProfilePage({ params }) {
                     <li className="job-skill" key={index}>
                       {skill}
                       {isOwner && (
-                      <form
-                        action={async (formData) => {
-                          "use server";
-                          const { userId } = await auth();
-                          if (userId !== id) {
+                        <form
+                          action={async (formData) => {
+                            "use server";
+                            const { userId } = await auth();
+                            if (userId !== id) {
+                              revalidatePath(`/freelancer/profile/${id}`);
+                              redirect(`/freelancer/profile/${id}`);
+                              return;
+                            }
+                            const skillToDelete = formData.get("skill");
+
+                            const { rows: freelancerRows } = await db.query(
+                              `SELECT skills FROM fm_freelancers WHERE clerk_id = $1`,
+                              [id],
+                            );
+                            const existingSkills =
+                              freelancerRows[0]?.skills || [];
+                            const updatedSkills = existingSkills.filter(
+                              (s) => s !== skillToDelete,
+                            );
+
+                            await db.query(
+                              `UPDATE fm_freelancers SET skills = $1 WHERE clerk_id = $2`,
+                              [JSON.stringify(updatedSkills), id],
+                            );
+
                             revalidatePath(`/freelancer/profile/${id}`);
                             redirect(`/freelancer/profile/${id}`);
-                            return;
-                          }
-                          const skillToDelete = formData.get("skill");
-
-                          const { rows: freelancerRows } = await db.query(
-                            `SELECT skills FROM fm_freelancers WHERE clerk_id = $1`,
-                            [id],
-                          );
-                          const existingSkills =
-                            freelancerRows[0]?.skills || [];
-                          const updatedSkills = existingSkills.filter(
-                            (s) => s !== skillToDelete,
-                          );
-
-                          await db.query(
-                            `UPDATE fm_freelancers SET skills = $1 WHERE clerk_id = $2`,
-                            [JSON.stringify(updatedSkills), id],
-                          );
-
-                          revalidatePath(`/freelancer/profile/${id}`);
-                          redirect(`/freelancer/profile/${id}`);
-                        }}
-                        style={{ display: "inline-block", marginLeft: "8px" }}
-                      >
-                        <input type="hidden" name="skill" value={skill} />
-                        <button type="submit" className="delete-skill-btn">
-                          X
-                        </button>
-                      </form>
+                          }}
+                          style={{ display: "inline-block", marginLeft: "8px" }}
+                        >
+                          <input type="hidden" name="skill" value={skill} />
+                          <button type="submit" className="delete-skill-btn">
+                            X
+                          </button>
+                        </form>
                       )}
                     </li>
                   ))
@@ -448,6 +468,35 @@ export default async function FreelancerProfilePage({ params }) {
                   </form>
                 </>
               )}
+            </div>
+            <div className="profile-skills-form-contents">
+              <h2 className="profile-username">Reviews</h2>
+              <h2>Overall Rating:</h2>
+              {overallRating ? (
+                <p>
+                  {overallRating} / 5⭐ ({freelancerReviews.length} reviews)
+                </p>
+              ) : (
+                <p>No rating yet.</p>
+              )}
+              <ul>
+                {freelancerReviews.map((review) => (
+                  <li key={review.id} className="review-container">
+                    <p>
+                      <strong>Rating:</strong> {review.rating} / 5⭐
+                    </p>
+                    <p>
+                      <strong>Review:</strong> {review.content}
+                    </p>
+                    <p>
+                      <small>
+                        Created at:{" "}
+                        {new Date(review.created_at).toLocaleString()}
+                      </small>
+                    </p>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
