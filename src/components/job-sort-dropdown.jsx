@@ -27,6 +27,8 @@ export default function JobSortDropdown({ currentSort }) {
       >
         <option value="latest">Latest first</option>
         <option value="oldest">Oldest first</option>
+        <option value="budget_high">Budget: high to low</option>
+        <option value="budget_low">Budget: low to high</option>
       </select>
     </div>
   );
