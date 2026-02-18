@@ -1,12 +1,24 @@
 import { db } from "@/lib/dbConnection";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
+import { Coins, Gem } from "lucide-react";
 import EditableUsername from "@/components/EditableUsername";
 import Editablebio from "@/components/EditBio";
 import EditableHourlyRate from "@/components/EditableHourlyRate";
+import { getTierForClerkId } from "@/lib/helperFunctions";
 
 export default async function FreelancerProfilePage({ params }) {
   const { id } = await params;
+  const { userId, has } = await auth();
+  const profileTier =
+    userId === id
+      ? has({ plan: "pro" })
+        ? "pro"
+        : has({ plan: "advanced" }) || has({ feature: "25_proposals_month" })
+          ? "advanced"
+          : null
+      : await getTierForClerkId(id);
 
   const skillOptions = [
     "JavaScript",
@@ -182,123 +194,150 @@ export default async function FreelancerProfilePage({ params }) {
 
   return (
     <>
-      <div className="user-profile-container">
-        <h1 className="profile-title">Profile</h1>
-        <div className="user-details">
-          <div className="profile-skills-form-contents">
-            <EditableUsername
-              username={username}
-              action={handleUsernameChange}
-            />
-            <p className="profile-role">Role: {userDetails[0].role}</p>
-            <Editablebio bio={bio} action={handleBioChange} />
-            <EditableHourlyRate
-              hourly_rate={hourly_rate}
-              action={handleHourlyRateChange}
-            />
-
-            <ul className="profile-skills" key={id}>
-              {freelancerDetails[0]?.skills?.length > 0 ? (
-                freelancerDetails[0].skills.map((skill, index) => (
-                  <li className="job-skill" key={index}>
-                    {skill}
-                    <form
-                      action={async (formData) => {
-                        "use server";
-                        const skillToDelete = formData.get("skill");
-
-                        const { rows: freelancerRows } = await db.query(
-                          `SELECT skills FROM fm_freelancers WHERE clerk_id = $1`,
-                          [id],
-                        );
-                        const existingSkills = freelancerRows[0]?.skills || [];
-                        const updatedSkills = existingSkills.filter(
-                          (s) => s !== skillToDelete,
-                        );
-
-                        await db.query(
-                          `UPDATE fm_freelancers SET skills = $1 WHERE clerk_id = $2`,
-                          [JSON.stringify(updatedSkills), id],
-                        );
-
-                        revalidatePath(`/freelancer/profile/${id}`);
-                        redirect(`/freelancer/profile/${id}`);
-                      }}
-                      style={{ display: "inline-block", marginLeft: "8px" }}
-                    >
-                      <input type="hidden" name="skill" value={skill} />
-                      <button type="submit" className="delete-skill-btn">
-                        X
-                      </button>
-                    </form>
-                  </li>
-                ))
-              ) : (
-                <li>No skills added yet.</li>
-              )}
-            </ul>
+      <div className="flex w-full justify-center px-4 py-6">
+        <div className="user-profile-container relative w-full max-w-4xl rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+          <div
+            className={`absolute right-4 top-4 z-10 flex items-center gap-1 rounded-full px-2 py-1 text-sm font-medium shadow-sm ring-1 ring-black/5 ${
+              profileTier === "pro"
+                ? "bg-violet-100 text-violet-800"
+                : profileTier === "advanced"
+                  ? "bg-amber-100 text-amber-800"
+                  : "bg-gray-100 text-gray-700"
+            }`}
+          >
+            {profileTier === "pro" ? (
+              <>
+                <Gem className="h-5 w-5" />
+                <span>Pro</span>
+              </>
+            ) : profileTier === "advanced" ? (
+              <>
+                <Coins className="h-5 w-5" />
+                <span>Advanced</span>
+              </>
+            ) : (
+              <span>Free</span>
+            )}
           </div>
-          <form action={handleSubmit} className="profile-skills-form-contents">
-            <div className="client-job-form-group">
-              <div className="profile-skills-container">
-                {skillOptions.map((skill) => (
-                  <div className="skill-add-conatiner" key={skill}>
-                    <label className="checkbox-label">
-                      <input
-                        type="checkbox"
-                        className="profile-skill-input"
-                        name="skills"
-                        value={skill}
-                      />
-                      {skill}
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <button className="submit-btn" type="submit">
-              Add Skills
-            </button>
-          </form>
-          <div className="profile-skills-form-contents">
-            <h2 className="profile-username">Links</h2>
-
-            <ul className="profile-links">
-              {freelancerDetails[0]?.links?.length > 0 ? (
-                freelancerDetails[0].links.map((link, index) => (
-                  <li key={index} className="profile-link-item">
-                    <a href={link} target="_blank">
-                      {link}
-                    </a>
-                    <form
-                      action={handleDeleteLink}
-                      style={{ display: "inline-block", marginLeft: "8px" }}
-                    >
-                      <input type="hidden" name="link" value={link} />
-                      <button type="submit" className="delete-link-btn">
-                        🗑️
-                      </button>
-                    </form>
-                  </li>
-                ))
-              ) : (
-                <li>No links added yet.</li>
-              )}
-            </ul>
-
-            <form action={handleAddLink} className="add-link-form">
-              <input
-                type="url"
-                name="link"
-                placeholder="Add a link (https://example.com)"
-                required
-                className="link-input"
+          <div className="user-details">
+            <div className="profile-skills-form-contents">
+              <EditableUsername
+                username={username}
+                action={handleUsernameChange}
               />
-              <button type="submit" className="submit-btn">
-                Add Link
+              <Editablebio bio={bio} action={handleBioChange} />
+              <EditableHourlyRate
+                hourly_rate={hourly_rate}
+                action={handleHourlyRateChange}
+              />
+
+              <ul className="profile-skills" key={id}>
+                {freelancerDetails[0]?.skills?.length > 0 ? (
+                  freelancerDetails[0].skills.map((skill, index) => (
+                    <li className="job-skill" key={index}>
+                      {skill}
+                      <form
+                        action={async (formData) => {
+                          "use server";
+                          const skillToDelete = formData.get("skill");
+
+                          const { rows: freelancerRows } = await db.query(
+                            `SELECT skills FROM fm_freelancers WHERE clerk_id = $1`,
+                            [id],
+                          );
+                          const existingSkills =
+                            freelancerRows[0]?.skills || [];
+                          const updatedSkills = existingSkills.filter(
+                            (s) => s !== skillToDelete,
+                          );
+
+                          await db.query(
+                            `UPDATE fm_freelancers SET skills = $1 WHERE clerk_id = $2`,
+                            [JSON.stringify(updatedSkills), id],
+                          );
+
+                          revalidatePath(`/freelancer/profile/${id}`);
+                          redirect(`/freelancer/profile/${id}`);
+                        }}
+                        style={{ display: "inline-block", marginLeft: "8px" }}
+                      >
+                        <input type="hidden" name="skill" value={skill} />
+                        <button type="submit" className="delete-skill-btn">
+                          X
+                        </button>
+                      </form>
+                    </li>
+                  ))
+                ) : (
+                  <li>No skills added yet.</li>
+                )}
+              </ul>
+            </div>
+            <form
+              action={handleSubmit}
+              className="profile-skills-form-contents"
+            >
+              <div className="client-job-form-group">
+                <div className="profile-skills-container">
+                  {skillOptions.map((skill) => (
+                    <div className="skill-add-conatiner" key={skill}>
+                      <label className="checkbox-label">
+                        <input
+                          type="checkbox"
+                          className="profile-skill-input"
+                          name="skills"
+                          value={skill}
+                        />
+                        {skill}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <button className="submit-btn" type="submit">
+                Add Skills
               </button>
             </form>
+            <div className="profile-skills-form-contents">
+              <h2 className="profile-username">Links</h2>
+
+              <ul className="profile-links">
+                {freelancerDetails[0]?.links?.length > 0 ? (
+                  freelancerDetails[0].links.map((link, index) => (
+                    <li key={index} className="profile-link-item">
+                      <a href={link} target="_blank">
+                        {link}
+                      </a>
+                      <form
+                        action={handleDeleteLink}
+                        style={{ display: "inline-block", marginLeft: "8px" }}
+                      >
+                        <input type="hidden" name="link" value={link} />
+                        <button type="submit" className="delete-link-btn">
+                          🗑️
+                        </button>
+                      </form>
+                    </li>
+                  ))
+                ) : (
+                  <li>No links added yet.</li>
+                )}
+              </ul>
+
+              <form action={handleAddLink} className="add-link-form">
+                <input
+                  type="url"
+                  name="link"
+                  placeholder="Add a link (https://example.com)"
+                  required
+                  className="link-input"
+                />
+                <button type="submit" className="submit-btn">
+                  Add Link
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
