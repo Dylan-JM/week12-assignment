@@ -3,6 +3,11 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/dbConnection";
 import SetupForm from "./SetupForm";
 
+export const metadata = {
+  title: "Choose Your Role",
+  description: "Set up your TrueHire account as a client or freelancer.",
+};
+
 export default async function SetupPage() {
   const { userId } = await auth();
   if (!userId) redirect("/sign-in");

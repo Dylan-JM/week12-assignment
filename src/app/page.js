@@ -1,5 +1,11 @@
 import FAQ from "@/components/FAQ";
 
+export const metadata = {
+  title: "Connect with Freelancers",
+  description:
+    "TrueHire connects skilled freelancers with clients ready to hire. Create your profile, explore opportunities, and start building valuable partnerships.",
+};
+
 export default function Home() {
   return (
     <div className="home-page-container">

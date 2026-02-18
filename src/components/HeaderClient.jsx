@@ -8,7 +8,7 @@ export default function HeaderClient({ role }) {
 
   return (
     <div className="header">
-      <h1 className="website-name">Website Name</h1>
+      <h1 className="website-name">TrueHire</h1>
 
       <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
         ☰

@@ -1,3 +1,9 @@
+export const metadata = {
+  title: "About Us",
+  description:
+    "Learn about TrueHire — a modern freelance marketplace connecting clients with skilled professionals. Our mission is where opportunity meets talent.",
+};
+
 export default function About() {
   return (
     <main className="about-container">

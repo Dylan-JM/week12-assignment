@@ -1,5 +1,10 @@
 import { PricingTable } from "@clerk/nextjs";
 
+export const metadata = {
+  title: "Plans & Pricing",
+  description: "Choose your TrueHire plan: Free, Advanced, or Pro. Unlock more proposals and profile features.",
+};
+
 export default function PricingPage() {
   return (
     <>

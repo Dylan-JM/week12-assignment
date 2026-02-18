@@ -2,6 +2,11 @@ import { auth } from "@clerk/nextjs/server";
 import {db} from '@/lib/dbConnection'
 import AnalyticsClient from '@/components/AnalyticsClient'
 
+export const metadata = {
+  title: "Analytics",
+  description: "View reports and insights about your jobs, income, and expenses on TrueHire.",
+};
+
 export default async function FreelancerAnalyticsPage() {
   const { userId } = await auth();
   

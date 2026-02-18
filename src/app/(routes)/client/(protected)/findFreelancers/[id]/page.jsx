@@ -6,6 +6,25 @@ import { Coins, Gem } from "lucide-react";
 import EditableReview from "@/components/EditableReview";
 import { getTierForClerkId } from "@/lib/helperFunctions";
 
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+  const { rows } = await db.query(
+    `SELECT name, bio, hourly_rate FROM fm_freelancers WHERE id = $1`,
+    [id],
+  );
+  const freelancer = rows[0];
+  if (!freelancer) return { title: "Freelancer Not Found" };
+  const name = freelancer.name ?? "Freelancer";
+  const bio = freelancer.bio?.slice(0, 160) ?? "";
+  const rate = freelancer.hourly_rate != null ? ` £${freelancer.hourly_rate}/hr` : "";
+  return {
+    title: `${name} — Freelancer Profile`,
+    description: bio
+      ? `${name} on TrueHire.${rate ? ` Hourly rate:${rate}` : ""} ${bio}`
+      : `View ${name}'s profile, skills${rate ? ` and rate${rate}` : ""} on TrueHire.`,
+  };
+}
+
 export default async function ViewFreelancerPage({ params }) {
   const { id } = await params;
 
