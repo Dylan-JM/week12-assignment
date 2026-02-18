@@ -1,6 +1,11 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 
+export const metadata = {
+  title: "Freelancer Dashboard",
+  description: "Manage your active jobs, profile, analytics, and find new opportunities on TrueHire.",
+};
+
 export default async function clientDashboardPage() {
   const { userId } = await auth();
 

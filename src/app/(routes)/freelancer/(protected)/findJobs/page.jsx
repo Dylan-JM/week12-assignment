@@ -3,6 +3,11 @@ import Link from "next/link";
 import { Coins, Gem } from "lucide-react";
 import JobSortDropdown from "@/components/job-sort-dropdown";
 
+export const metadata = {
+  title: "Find Jobs",
+  description: "Browse and apply for freelance jobs. Filter by skills and budget on TrueHire.",
+};
+
 const skillOptions = [
   "JavaScript",
   "TypeScript",

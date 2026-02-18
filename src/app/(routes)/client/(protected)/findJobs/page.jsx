@@ -1,5 +1,10 @@
 import { db } from "@/lib/dbConnection";
 
+export const metadata = {
+  title: "Browse Jobs",
+  description: "Explore all jobs posted on TrueHire. See what other clients are looking for.",
+};
+
 export default async function clientFindAllJobsPage() {
   const { rows } = await db.query(`SELECT * FROM fm_jobs`);
 

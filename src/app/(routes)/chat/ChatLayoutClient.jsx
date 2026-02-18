@@ -224,7 +224,7 @@ function ChatLayoutInner({ children }) {
   );
 }
 
-export default function ChatLayout({ children }) {
+export default function ChatLayoutClient({ children }) {
   return (
     <Suspense fallback={<ChatLayoutFallback />}>
       <ChatLayoutInner>{children}</ChatLayoutInner>

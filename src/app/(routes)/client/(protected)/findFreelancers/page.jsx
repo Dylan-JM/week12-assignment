@@ -4,6 +4,11 @@ import FreelancersList from "@/components/FreelancersList";
 
 const TIER_ORDER = { pro: 0, advanced: 1, free: 2 };
 
+export const metadata = {
+  title: "Find Freelancers",
+  description: "Browse freelancer profiles, skills, and rates. Find the right talent for your project on TrueHire.",
+};
+
 export default async function ClientFindFreelancersPage() {
   const { rows } = await db.query(`SELECT * FROM fm_freelancers`);
 

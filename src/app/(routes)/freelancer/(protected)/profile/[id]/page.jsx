@@ -8,6 +8,45 @@ import Editablebio from "@/components/EditBio";
 import EditableHourlyRate from "@/components/EditableHourlyRate";
 import { getTierForClerkId, getProfileLimits } from "@/lib/helperFunctions";
 
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+  const { rows: userRows } = await db.query(
+    `SELECT role FROM fm_users WHERE clerk_id = $1`,
+    [id],
+  );
+  const role = userRows[0]?.role;
+  if (role === "freelancer") {
+    const { rows: freelancerRows } = await db.query(
+      `SELECT name, bio, hourly_rate FROM fm_freelancers WHERE clerk_id = $1`,
+      [id],
+    );
+    const f = freelancerRows[0];
+    const name = f?.name ?? "Freelancer";
+    const bio = f?.bio?.slice(0, 160) ?? "";
+    const rate = f?.hourly_rate != null ? ` £${f.hourly_rate}/hr` : "";
+    return {
+      title: `${name} — Profile`,
+      description: bio
+        ? `${name}'s profile on TrueHire.${rate ? ` Hourly rate:${rate}` : ""} ${bio}`
+        : `View and edit ${name}'s freelancer profile${rate ? ` and rate${rate}` : ""} on TrueHire.`,
+    };
+  }
+  if (role === "client") {
+    const { rows: clientRows } = await db.query(
+      `SELECT name, bio FROM fm_clients WHERE clerk_id = $1`,
+      [id],
+    );
+    const c = clientRows[0];
+    const name = c?.name ?? "User";
+    const bio = c?.bio?.slice(0, 160) ?? "";
+    return {
+      title: `${name} — Profile`,
+      description: bio ? `${name} on TrueHire. ${bio}` : `View ${name}'s profile on TrueHire.`,
+    };
+  }
+  return { title: "Profile" };
+}
+
 export default async function FreelancerProfilePage({ params }) {
   const { id } = await params;
   const { userId, has } = await auth();

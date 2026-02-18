@@ -1,5 +1,10 @@
 import ContactForm from "@/components/ContactForm";
 
+export const metadata = {
+  title: "Contact Us",
+  description: "Get in touch with TrueHire. Send your enquiry or use our in-platform messaging.",
+};
+
 export default function Contact() {
   return (
     <>

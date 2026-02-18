@@ -2,6 +2,11 @@ import { db } from "@/lib/dbConnection";
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 
+export const metadata = {
+  title: "My Jobs",
+  description: "View and manage your posted jobs on TrueHire.",
+};
+
 export default async function clientPage() {
   const { userId } = await auth();
 
