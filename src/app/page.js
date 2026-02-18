@@ -1,7 +1,8 @@
+import Image from "next/image";
 import FAQ from "@/components/FAQ";
 
 export const metadata = {
-  title: "Connect with Freelancers",
+  title: "TrueHire | Connect with Freelancers",
   description:
     "TrueHire connects skilled freelancers with clients ready to hire. Create your profile, explore opportunities, and start building valuable partnerships.",
 };
@@ -20,10 +21,12 @@ export default function Home() {
       <h3 className="homepage-features">Features</h3>
       <div className="feature-card-container">
         <div className="feature-card">
-          <img
+          <Image
             src="https://img.freepik.com/premium-vector/checkmark-sign-verified-symbol-approval-done-element-collection_809852-1013.jpg"
-            alt=""
+            alt="Verified checkmark symbol"
             className="feature-card-img"
+            width={400}
+            height={300}
           />
           <h2>Verified Profiles</h2>
           <p>
@@ -32,10 +35,12 @@ export default function Home() {
           </p>
         </div>
         <div className="feature-card">
-          <img
+          <Image
             src="https://www.talentprise.com/wp-content/uploads/2024/08/job-matching.png"
-            alt=""
+            alt="Job matching illustration"
             className="feature-card-img"
+            width={400}
+            height={300}
           />
           <h2>Smart Job Matching</h2>
           <p>
@@ -45,10 +50,12 @@ export default function Home() {
           </p>
         </div>
         <div className="feature-card">
-          <img
+          <Image
             src="https://www.vonage.com/content/dam/vonage/us-en/resources/imagery/article-thumbnails/API-SEO_SECURE-MESSAGING-Blog-Thumbnail.png"
-            alt=""
+            alt="Secure messaging illustration"
             className="feature-card-img"
+            width={400}
+            height={300}
           />
           <h2>Secure In-Platform Messaging</h2>
           <p>
