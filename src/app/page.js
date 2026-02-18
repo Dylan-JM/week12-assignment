@@ -2,7 +2,7 @@ import Image from "next/image";
 import FAQ from "@/components/FAQ";
 
 export const metadata = {
-  title: "TrueHire | Connect with Freelancers",
+  title: "TrueHire",
   description:
     "TrueHire connects skilled freelancers with clients ready to hire. Create your profile, explore opportunities, and start building valuable partnerships.",
 };
