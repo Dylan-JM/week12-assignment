@@ -31,7 +31,7 @@ export default async function SpecificJobPage({ params }) {
        ) sub
        WHERE sub.content::jsonb->>'type' = 'proposal' AND sub.content::jsonb->>'jobId' = $2
        LIMIT 1`,
-      [userId, job.id]
+      [userId, job.id],
     );
     alreadyProposed = proposalRows.length > 0;
   }
@@ -39,6 +39,24 @@ export default async function SpecificJobPage({ params }) {
   return (
     <>
       <h1>Job Page</h1>
+      {jobDetails.map((job) => (
+        <div key={job.id}>
+          <h1 className="specific-job-title">{job.title}</h1>
+          <p className="column-info">{job.description}</p>
+          <p className="column-info">{job.budget}</p>
+          <p className="column-info">
+            {job.deadline
+              ? new Date(job.deadline).toLocaleDateString()
+              : "No deadline"}
+          </p>
+          <p className="column-info">
+            Posted: {new Date(job.created_at).toLocaleDateString()}
+          </p>
+          <p className="column-info">{job.category}</p>
+          <p className="column-info">{job.skills_required}</p>
+          <p>${Number(job.budget).toFixed(2)}</p>
+          <div className="mt-4">
+            <ProposalForm jobId={job.id} alreadyProposed={alreadyProposed} />
       {jobDetails.map((job) => {
         const tier = getJobTier(job.budget);
         const userTier = has({ plan: "pro" })
