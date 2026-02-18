@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const skillOptions = [
   "JavaScript",
@@ -92,10 +93,38 @@ export default function FreelancersList({ freelancers }) {
       <div className="all-client-jobs-container">
         {filteredFreelancers.map((freelancer) => (
           <div className="client-job-container" key={freelancer.id}>
-            <h1 className="job-title">Username : {freelancer.name}</h1>
+            <Link
+              href={`/client/findFreelancers/${freelancer.id}`}
+              key={freelancer.id}
+            >
+              <h1 className="job-title">Username : {freelancer.name}</h1>
 
-            <p className="profile-bio">Bio : {freelancer.bio}</p>
-            <p className="profile-bio">Links:</p>
+              <p className="profile-bio">Bio : {freelancer.bio}</p>
+              <p className="profile-bio">Links:</p>
+
+              <h2>
+                <strong>Skills:</strong>
+              </h2>
+              <ul>
+                {freelancer.skills.map((skill, index) => (
+                  <li className="job-skill" key={index}>
+                    {skill}
+                  </li>
+                ))}
+              </ul>
+            </Link>
+            <button
+              type="button"
+              onClick={() => handleMessage(freelancer)}
+              disabled={
+                !user ||
+                !freelancer.clerk_id ||
+                messageLoadingId === freelancer.id
+              }
+              className="find-freelancer-message-btn"
+            >
+              {messageLoadingId === freelancer.id ? "Opening…" : "Message"}
+            </button>
             <ol className="profile-links">
               {freelancer.links?.length > 0 ? (
                 freelancer.links.map((link, index) => (
@@ -109,29 +138,6 @@ export default function FreelancersList({ freelancers }) {
                 <li>No links added yet.</li>
               )}
             </ol>
-
-            <h2>
-              <strong>Skills:</strong>
-            </h2>
-            <ul>
-              {freelancer.skills.map((skill, index) => (
-                <li className="job-skill" key={index}>
-                  {skill}
-                </li>
-              ))}
-            </ul>
-            <button
-              type="button"
-              onClick={() => handleMessage(freelancer)}
-              disabled={
-                !user ||
-                !freelancer.clerk_id ||
-                messageLoadingId === freelancer.id
-              }
-              className="find-freelancer-message-btn"
-            >
-              {messageLoadingId === freelancer.id ? "Opening…" : "Message"}
-            </button>
           </div>
         ))}
       </div>
