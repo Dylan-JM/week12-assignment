@@ -95,71 +95,69 @@ export default function FreelancersList({ freelancers }) {
         {filteredFreelancers.map((freelancer) => {
           const tier = freelancer.tier ?? "free";
           return (
-          <div className="client-job-container relative" key={freelancer.id}>
-            {tier === "free" && (
-              <div className="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-slate-100 px-2 py-1 text-slate-600">
-                <CircleDot className="h-5 w-5" />
-                <span className="text-sm font-medium">Free</span>
-              </div>
-            )}
-            {tier === "advanced" && (
-              <div className="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-amber-100 px-2 py-1 text-amber-800">
-                <Coins className="h-5 w-5" />
-                <span className="text-sm font-medium">Advanced</span>
-              </div>
-            )}
-            {tier === "pro" && (
-              <div className="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-violet-100 px-2 py-1 text-violet-800">
-                <Gem className="h-5 w-5" />
-                <span className="text-sm font-medium">Premium</span>
-              </div>
-            )}
-            <Link
-              href={`/client/findFreelancers/${freelancer.id}`}
-              key={freelancer.id}
-            >
-              <h1 className="job-title pr-32">Username : {freelancer.name}</h1>
-
-              <p className="profile-bio">Bio : {freelancer.bio}</p>
-              <p className="profile-bio">Links:</p>
-
-              <h2>
-                <strong>Skills:</strong>
-              </h2>
-              <ul>
-                {freelancer.skills.map((skill, index) => (
-                  <li className="job-skill" key={index}>
-                    {skill}
-                  </li>
-                ))}
-              </ul>
-            </Link>
-            <button
-              type="button"
-              onClick={() => handleMessage(freelancer)}
-              disabled={
-                !user ||
-                !freelancer.clerk_id ||
-                messageLoadingId === freelancer.id
-              }
-              className="find-freelancer-message-btn"
-            >
-              {messageLoadingId === freelancer.id ? "Opening…" : "Message"}
-            </button>
-            <ol className="profile-links">
-              {freelancer.links?.length > 0 ? (
-                freelancer.links.map((link, index) => (
-                  <li key={index}>
-                    <a href={link} target="_blank" rel="noopener noreferrer">
-                      {link}
-                    </a>
-                  </li>
-                ))
-              ) : (
-                <li>No links added yet.</li>
+            <div className="client-job-container relative" key={freelancer.id}>
+              {tier === "free" && (
+                <div className="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-slate-100 px-2 py-1 text-slate-600">
+                  <CircleDot className="h-5 w-5" />
+                  <span className="text-sm font-medium">Free</span>
+                </div>
               )}
-            </ol>
-          </div>
+              {tier === "advanced" && (
+                <div className="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-amber-100 px-2 py-1 text-amber-800">
+                  <Coins className="h-5 w-5" />
+                  <span className="text-sm font-medium">Advanced</span>
+                </div>
+              )}
+              {tier === "pro" && (
+                <div className="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-violet-100 px-2 py-1 text-violet-800">
+                  <Gem className="h-5 w-5" />
+                  <span className="text-sm font-medium">Premium</span>
+                </div>
+              )}
+              <Link
+                href={`/client/findFreelancers/${freelancer.id}`}
+                key={freelancer.id}
+              >
+                <h1 className="job-title pr-32">{freelancer.name}</h1>
+
+                <p className="profile-bio">{freelancer.bio}</p>
+                <h2>
+                  <strong>Skills:</strong>
+                </h2>
+                <ul>
+                  {freelancer.skills.map((skill, index) => (
+                    <li className="job-skill" key={index}>
+                      {skill}
+                    </li>
+                  ))}
+                </ul>
+              </Link>
+              <button
+                type="button"
+                onClick={() => handleMessage(freelancer)}
+                disabled={
+                  !user ||
+                  !freelancer.clerk_id ||
+                  messageLoadingId === freelancer.id
+                }
+                className="find-freelancer-message-btn"
+              >
+                {messageLoadingId === freelancer.id ? "Opening…" : "Message"}
+              </button>
+              <ol className="profile-links">
+                {freelancer.links?.length > 0 ? (
+                  freelancer.links.map((link, index) => (
+                    <li key={index}>
+                      <a href={link} target="_blank" rel="noopener noreferrer">
+                        {link}
+                      </a>
+                    </li>
+                  ))
+                ) : (
+                  <li>No links added yet.</li>
+                )}
+              </ol>
+            </div>
           );
         })}
       </div>
