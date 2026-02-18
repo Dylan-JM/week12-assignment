@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { CircleDot, Coins, Gem } from "lucide-react";
 
 const skillOptions = [
   "JavaScript",
@@ -91,13 +92,33 @@ export default function FreelancersList({ freelancers }) {
       </div>
 
       <div className="all-client-jobs-container">
-        {filteredFreelancers.map((freelancer) => (
-          <div className="client-job-container" key={freelancer.id}>
+        {filteredFreelancers.map((freelancer) => {
+          const tier = freelancer.tier ?? "free";
+          return (
+          <div className="client-job-container relative" key={freelancer.id}>
+            {tier === "free" && (
+              <div className="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-slate-100 px-2 py-1 text-slate-600">
+                <CircleDot className="h-5 w-5" />
+                <span className="text-sm font-medium">Free</span>
+              </div>
+            )}
+            {tier === "advanced" && (
+              <div className="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-amber-100 px-2 py-1 text-amber-800">
+                <Coins className="h-5 w-5" />
+                <span className="text-sm font-medium">Advanced</span>
+              </div>
+            )}
+            {tier === "pro" && (
+              <div className="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-violet-100 px-2 py-1 text-violet-800">
+                <Gem className="h-5 w-5" />
+                <span className="text-sm font-medium">Premium</span>
+              </div>
+            )}
             <Link
               href={`/client/findFreelancers/${freelancer.id}`}
               key={freelancer.id}
             >
-              <h1 className="job-title">Username : {freelancer.name}</h1>
+              <h1 className="job-title pr-32">Username : {freelancer.name}</h1>
 
               <p className="profile-bio">Bio : {freelancer.bio}</p>
               <p className="profile-bio">Links:</p>
@@ -139,7 +160,8 @@ export default function FreelancersList({ freelancers }) {
               )}
             </ol>
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
