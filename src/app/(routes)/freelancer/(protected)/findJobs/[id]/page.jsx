@@ -23,7 +23,7 @@ export default async function SpecificJobPage({ params }) {
        ) sub
        WHERE sub.content::jsonb->>'type' = 'proposal' AND sub.content::jsonb->>'jobId' = $2
        LIMIT 1`,
-      [userId, job.id]
+      [userId, job.id],
     );
     alreadyProposed = proposalRows.length > 0;
   }
@@ -40,6 +40,9 @@ export default async function SpecificJobPage({ params }) {
             {job.deadline
               ? new Date(job.deadline).toLocaleDateString()
               : "No deadline"}
+          </p>
+          <p className="column-info">
+            Posted: {new Date(job.created_at).toLocaleDateString()}
           </p>
           <p className="column-info">{job.category}</p>
           <p className="column-info">{job.skills_required}</p>

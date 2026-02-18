@@ -7,7 +7,7 @@ export default async function freelancerFindJobs() {
     `SELECT * FROM fm_jobs j
      WHERE NOT EXISTS (
        SELECT 1 FROM fm_contracts c WHERE c.job_id = j.id AND c.status = 'active'
-     )`
+     )`,
   );
 
   return (
@@ -25,7 +25,9 @@ export default async function freelancerFindJobs() {
                 <h2 className="job-deadline">
                   Deadline: {new Date(post.deadline).toLocaleDateString()}
                 </h2>
-
+                <h2 className="job-created">
+                  Posted: {new Date(post.created_at).toLocaleDateString()}
+                </h2>
                 <h2 className="job-category">Category : {post.category}</h2>
                 <div>
                   <h2 className="job-skills-required-title">
