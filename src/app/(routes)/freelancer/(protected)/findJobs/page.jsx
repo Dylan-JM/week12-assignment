@@ -1,6 +1,14 @@
 import { db } from "@/lib/dbConnection";
 import Link from "next/link";
+import { Coins, Gem } from "lucide-react";
 import JobSortDropdown from "@/components/job-sort-dropdown";
+
+function getJobTier(budget) {
+  const b = Number(budget) || 0;
+  if (b < 250) return "free";
+  if (b < 1000) return "advanced";
+  return "premium";
+}
 
 export default async function freelancerFindJobs({ searchParams }) {
   const params = await searchParams;
@@ -17,14 +25,6 @@ export default async function freelancerFindJobs({ searchParams }) {
   else if (sort === "budget_low") orderBy = "j.budget ASC NULLS LAST";
   else if (sort === "oldest") orderBy = "j.created_at ASC NULLS LAST";
   else orderBy = "j.created_at DESC NULLS LAST";
-import { Coins, Gem } from "lucide-react";
-
-function getJobTier(budget) {
-  const b = Number(budget) || 0;
-  if (b < 250) return "free";
-  if (b < 1000) return "advanced";
-  return "premium";
-}
 
   const { rows } = await db.query(
     `SELECT * FROM fm_jobs j
