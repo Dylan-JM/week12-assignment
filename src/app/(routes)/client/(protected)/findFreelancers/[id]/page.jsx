@@ -152,7 +152,7 @@ export default async function ViewFreelancerPage({ params }) {
                   {overallRating} / 5⭐ ({freelancerReviews.length} reviews)
                 </p>
               ) : (
-                <p>No reviews yet.</p>
+                <p>No rating yet.</p>
               )}
 
               {freelancerReviews.length > 0 ? (

@@ -811,6 +811,19 @@ ul {
   margin: 1rem;
 }
 
+.plans-contents {
+  padding: 1.75rem;
+  margin: 1rem auto;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  width: 90%;
+}
+
 .profile-skills-form-contents {
   padding: 1.75rem;
   margin: 1rem;

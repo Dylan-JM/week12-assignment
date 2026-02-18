@@ -1,17 +1,20 @@
 "use client";
 
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 export default function JobSortDropdown({ currentSort }) {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const handleChange = (e) => {
     const value = e.target.value;
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(searchParams.toString());
+
     if (value && value !== "latest") params.set("sort", value);
-    const query = params.toString();
-    router.push(query ? `${pathname}?${query}` : pathname);
+    else params.delete("sort");
+
+    router.push(`${pathname}?${params.toString()}`);
   };
 
   return (
