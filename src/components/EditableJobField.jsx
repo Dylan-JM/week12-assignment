@@ -14,7 +14,7 @@ export default function EditableJobField({
   const [isEditing, setIsEditing] = useState(false);
 
   return (
-    <div className="editable-job-field">
+    <div className="editable-job-field m-2 text-xl">
       {!isEditing ? (
         <div>
           <strong>{label}:</strong> {value || "—"}{" "}
