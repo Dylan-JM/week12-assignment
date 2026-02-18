@@ -1,17 +1,25 @@
 import { db } from "@/lib/dbConnection";
 import Link from "next/link";
-import { auth } from "@clerk/nextjs/server";
+import JobSortDropdown from "@/components/job-sort-dropdown";
 
-export default async function freelancerFindJobs() {
+export default async function freelancerFindJobs({ searchParams }) {
+  const params = await searchParams;
+  const sort = params?.sort === "oldest" ? "oldest" : "latest";
+  const order = sort === "oldest" ? "ASC" : "DESC";
+
   const { rows } = await db.query(
     `SELECT * FROM fm_jobs j
      WHERE NOT EXISTS (
        SELECT 1 FROM fm_contracts c WHERE c.job_id = j.id AND c.status = 'active'
-     )`,
+     )
+     ORDER BY j.created_at ${order} NULLS LAST`,
   );
 
   return (
     <>
+      <div className="mb-4 flex justify-end">
+        <JobSortDropdown currentSort={sort} />
+      </div>
       <div className="all-client-jobs-container">
         {rows.map((post) => (
           <Link href={`/freelancer/findJobs/${post.id}`} key={post.id}>
