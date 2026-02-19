@@ -54,7 +54,7 @@ export default function JobsChart({ id, income, expenses }) {
       },
       options: {
         responsive: true,
-        maintainAspectRatio: false,
+        maintainAspectRatio: true,
         scales: {
           x: {
             type: "linear",
