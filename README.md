@@ -345,6 +345,10 @@ Add your contact details here.
 
 <!-- MARKDOWN LINKS & IMAGES -->
 
+## Light House Scores
+
+![alt text](image-1.png)
+
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Next-url]: https://nextjs.org/
 [React]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
