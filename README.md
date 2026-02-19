@@ -347,7 +347,7 @@ Add your contact details here.
 
 ## Light House Scores
 
-![alt text](image-1.png)
+![alt text](<img width="677" height="852" alt="image" src="https://github.com/user-attachments/assets/7c0bba0b-4115-4514-8e21-4d68c75e8166" />)
 
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Next-url]: https://nextjs.org/
