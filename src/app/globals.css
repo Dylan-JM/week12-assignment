@@ -640,6 +640,59 @@ ul {
   height: 1.15rem;
 }
 
+/* Upgrade plan / feature-gated message (e.g. AI Assistant) */
+.upgrade-plan-card-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  padding: 2rem 1rem;
+}
+
+.upgrade-plan-card {
+  max-width: 420px;
+  width: 100%;
+  padding: 2rem 1.75rem;
+  background-color: rgb(240, 239, 239);
+  border: 1px solid #eee;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.upgrade-plan-title {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0 0 0.75rem 0;
+  line-height: 1.4;
+}
+
+.upgrade-plan-description {
+  margin: 0 0 1.25rem 0;
+  color: #555;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.upgrade-plan-btn {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #4f46e5;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.upgrade-plan-btn:hover {
+  background-color: #4338ca;
+}
+
 /* ----------------------------------------- Contact Page ------------------------------------------ */
 
 .contact {
