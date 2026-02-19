@@ -25,6 +25,7 @@
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#project-structure-overview">Project Struture Overview</a></li>
     <li><a href="#future-improvements">Future Improvements</a></li>
+    <li><a href="#reflections">Reflections</a></li>
     <li><a href="#database-schema">Database Schema</a></li>
     <li><a href="#lighthouse-scores">Lighthouse Scores</a></li>
     <li><a href="#contact">Contact Us</a></li>
