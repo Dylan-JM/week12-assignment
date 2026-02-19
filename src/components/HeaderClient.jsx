@@ -27,14 +27,16 @@ export default function HeaderClient({ role }) {
         </SignedOut>
 
         <SignedIn>
-          {role === "client" ? (
-            <Link href="/client/dashboard">Client Portal</Link>
-          ) : role === "freelancer" ? (
-            <Link href="/freelancer/dashboard">Freelancer Portal</Link>
-          ) : (
-            <Link href="/setup">Portal</Link>
-          )}
-          <UserButton />
+          <div className="navbar-auth">
+            {role === "client" ? (
+              <Link href="/client/dashboard">Client Portal</Link>
+            ) : role === "freelancer" ? (
+              <Link href="/freelancer/dashboard">Freelancer Portal</Link>
+            ) : (
+              <Link href="/setup">Portal</Link>
+            )}
+            <UserButton />
+          </div>
         </SignedIn>
       </div>
     </div>
