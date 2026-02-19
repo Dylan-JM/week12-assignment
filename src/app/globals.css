@@ -615,6 +615,31 @@ ul {
   margin: 5px;
 }
 
+/* Freelancer job detail page – icon + text alignment */
+.freelancer-job-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.freelancer-job-meta-icon {
+  flex-shrink: 0;
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.freelancer-job-category {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.freelancer-job-category-icon {
+  flex-shrink: 0;
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
 /* ----------------------------------------- Contact Page ------------------------------------------ */
 
 .contact {
