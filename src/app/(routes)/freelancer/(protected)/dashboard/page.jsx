@@ -39,7 +39,7 @@ export default async function clientDashboardPage() {
     },
     {
       title: "AI Assistant",
-      desc: "Nedd Help With Your Jobs!",
+      desc: "Need Help With Your Jobs!",
       href: "/freelancer/aiassistant",
     },
   ];
