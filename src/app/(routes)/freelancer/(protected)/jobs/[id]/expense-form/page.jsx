@@ -14,14 +14,11 @@ export default async function ExpenseForm({ params }) {
 
     console.log(formValues);
 
-    try {
-      await db.query(
-        `INSERT INTO fm_expenses (name, price, job_id) VALUES ($1, $2, $3)`,
-        [formValues.name, formValues.price, id],
-      );
-    } catch (e) {
-      console.log(e);
-    }
+    await db.query(
+      `INSERT INTO fm_expenses (name, price, job_id) VALUES ($1, $2, $3)`,
+      [formValues.name, formValues.price, id],
+    );
+
     revalidatePath("..");
     redirect("..");
   }
