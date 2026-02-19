@@ -25,6 +25,8 @@
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#project-structure-overview">Project Struture Overview</a></li>
     <li><a href="#future-improvements">Future Improvements</a></li>
+    <li><a href="#database-schema">Database Schema</a></li>
+    <li><a href="#lighthouse-scores">Lighthouse Scores</a></li>
     <li><a href="#contact">Contact Us</a></li>
   </ol>
 </details>
@@ -471,6 +473,17 @@ Clerk handles:
 - The jobs/[id] page was quite educational. It incorporated many elements of a full stack next.js website into one page, needing 1 serving page, and 2 client pages along with database calls and a chart.
 - Learning to store files in buckets through supabase buckets was educational and useful as it opens a lot of possibilities for file-sharing. This also took a while to implement it working with the chat feature.
 
+---
+
+<!-- MARKDOWN LINKS & IMAGES -->
+
+# Database Schema
+
+![alt text](image-2.png)
+
+# Light House Scores
+
+<img width="677" height="852" alt="Screenshot 2026-02-19 100029" src="https://github.com/user-attachments/assets/c8ad8000-3ee4-4f36-b968-646d73148720" />
 
 ---
 
@@ -478,19 +491,9 @@ Clerk handles:
 
 Add your contact details here.
 
----
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- MARKDOWN LINKS & IMAGES -->
-
-## Database Schema
-
-![alt text](image-2.png)
-
-## Light House Scores
-
-<img width="677" height="852" alt="Screenshot 2026-02-19 100029" src="https://github.com/user-attachments/assets/c8ad8000-3ee4-4f36-b968-646d73148720" />
+---
 
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Next-url]: https://nextjs.org/
