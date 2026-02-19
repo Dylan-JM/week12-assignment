@@ -23,6 +23,9 @@
     <li><a href="#built-with">Built With</a></li>
     <li><a href="#getting-started">Getting Started</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#project-structure-overview">Project Struture Overview</a></li>
+    <li><a href="#future-improvements">Future Improvements</a></li>
+    <li><a href="#contact">Contact Us</a></li>
   </ol>
 </details>
 
