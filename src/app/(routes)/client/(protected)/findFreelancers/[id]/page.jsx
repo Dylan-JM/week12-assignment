@@ -114,7 +114,7 @@ export default async function ViewFreelancerPage({ params }) {
   return (
     <>
       <div className="flex w-full justify-center px-4 py-6">
-        <div className="user-profile-container relative w-full max-w-4xl rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="user-profile-container relative w-full max-w-6xl rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
           <div
             className={`absolute right-4 top-4 z-10 flex items-center gap-1 rounded-full px-2 py-1 text-sm font-medium shadow-sm ring-1 ring-black/5 ${
               profileTier === "pro"
@@ -176,7 +176,7 @@ export default async function ViewFreelancerPage({ params }) {
               <h2 className="profile-username">Reviews</h2>
               <h2>Overall Rating:</h2>
               {overallRating ? (
-                <p>
+                <p className="profile-rating-line">
                   {overallRating} / 5⭐ ({freelancerReviews.length} reviews)
                 </p>
               ) : (
@@ -216,12 +216,12 @@ export default async function ViewFreelancerPage({ params }) {
                 <p>No reviews yet.</p>
               )}
 
-              <form action={addReview} className="profile-skills-form-contents">
-                <div>
+              <form action={addReview} className="profile-skills-form-contents review-form">
+                <div className="review-form-group review-form-rating-group">
                   <h2 className="profile-username">Leave A Review!</h2>
-                  <label htmlFor="rating">Rating 1 - 5⭐:</label>
+                  <label htmlFor="rating">Rating 1 - 5⭐</label>
                   <input
-                    className="contact-us-input"
+                    className="review-form-input review-form-rating"
                     type="number"
                     id="rating"
                     name="rating"
@@ -230,17 +230,18 @@ export default async function ViewFreelancerPage({ params }) {
                     required
                   />
                 </div>
-                <div>
-                  <label htmlFor="content">Review:</label>
+                <div className="review-form-group">
+                  <label htmlFor="content">Review</label>
                   <textarea
-                    className="contact-us-textarea"
+                    className="review-form-textarea"
                     id="content"
                     name="content"
-                    rows={4}
+                    rows={5}
+                    placeholder="Write your review here..."
                     required
-                  ></textarea>
+                  />
                 </div>
-                <button type="submit" className="submit-btn">
+                <button type="submit" className="submit-btn review-form-submit">
                   Submit Review
                 </button>
               </form>

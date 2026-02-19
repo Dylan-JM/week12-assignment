@@ -336,7 +336,7 @@ export default async function FreelancerProfilePage({ params }) {
       <div className="sidebar-main-container">
         <FreelancerSideBar />
         <div className="flex w-full justify-center px-4 py-6">
-          <div className="user-profile-container relative w-full max-w-4xl rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="user-profile-container relative w-full max-w-6xl rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
             <div
               className={`absolute right-4 top-4 z-10 flex items-center gap-1 rounded-full px-2 py-1 text-sm font-medium shadow-sm ring-1 ring-black/5 ${
                 profileTier === "pro"
@@ -541,7 +541,8 @@ export default async function FreelancerProfilePage({ params }) {
                   {freelancerReviews.map((review) => (
                     <li key={review.id} className="review-container">
                       <p>
-                        <strong>Rating:</strong> {review.rating} / 5⭐
+                        <strong>Rating:</strong>{" "}
+                        <span className="review-rating-inline">{review.rating} / 5⭐</span>
                       </p>
                       <p>
                         <strong>User:</strong>{" "}

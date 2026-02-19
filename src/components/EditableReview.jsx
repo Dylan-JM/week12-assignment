@@ -14,7 +14,8 @@ export default function EditableReview({
       {!isEditing ? (
         <>
           <p>
-            <strong>Rating:</strong> {review.rating} / 5⭐
+            <strong>Rating:</strong>{" "}
+            <span className="review-rating-inline">{review.rating} / 5⭐</span>
           </p>
           <p>
             <strong>User:</strong> {review.client_name}
@@ -55,11 +56,13 @@ export default function EditableReview({
             await action(formData);
             setIsEditing(false);
           }}
-          className="flex flex-col gap-2"
+          className="review-edit-form"
         >
-          <label>
-            Rating:
+          <div className="review-form-group">
+            <label htmlFor="editable-review-rating">Rating (1 - 5) ⭐</label>
             <input
+              id="editable-review-rating"
+              className="review-form-input review-form-rating"
               type="number"
               name="rating"
               defaultValue={review.rating}
@@ -67,26 +70,26 @@ export default function EditableReview({
               max="5"
               required
             />
-            ⭐
-          </label>
-
-          <label>
-            Review:
+          </div>
+          <div className="review-form-group">
+            <label htmlFor="editable-review-content">Review</label>
             <textarea
+              id="editable-review-content"
+              className="review-form-textarea"
               name="content"
-              rows={4}
+              rows={5}
               defaultValue={review.content}
               required
             />
-          </label>
-          <div className="flex gap-2">
-            <button type="submit" className="submit-btn">
+          </div>
+          <div className="review-form-actions">
+            <button type="submit" className="submit-btn review-form-submit">
               Save
             </button>
             <button
               type="button"
               onClick={() => setIsEditing(false)}
-              className="submit-btn bg-gray-300"
+              className="submit-btn review-form-cancel"
             >
               Cancel
             </button>

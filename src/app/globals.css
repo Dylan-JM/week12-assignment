@@ -1077,9 +1077,106 @@ ul {
   background-color: rgb(240, 239, 239);
 }
 
+/* Review form: full width and styled inputs */
+.profile-skills-form-contents.review-form {
+  width: 100%;
+  max-width: 100%;
+  text-align: left;
+  align-items: stretch;
+  gap: 1.25rem;
+}
+
+.review-form .review-form-group,
+.review-edit-form .review-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.review-form .review-form-rating-group {
+  align-items: center;
+  text-align: center;
+}
+
+.review-form .profile-username,
+.review-edit-form .profile-username {
+  margin-bottom: 0.25rem;
+}
+
+.review-form-input,
+.review-form-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #cbd5e0;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-family: inherit;
+  background-color: #fff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.review-form-input:focus,
+.review-form-textarea:focus {
+  outline: none;
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+}
+
+.review-form-rating {
+  max-width: 5rem;
+}
+
+.review-form-textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.review-form-submit {
+  align-self: flex-start;
+  padding: 0.65rem 1.5rem;
+  font-size: 1rem;
+}
+
+.review-form .review-form-submit {
+  align-self: center;
+}
+
+.review-form-cancel {
+  background-color: #e2e8f0;
+  color: #334155;
+  border: 1px solid #cbd5e0;
+}
+
+.review-form-cancel:hover {
+  background-color: #cbd5e0;
+}
+
+.review-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+  text-align: left;
+}
+
+.review-form-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
 .profile-username {
   font-size: 1.3rem;
   font-weight: 600;
+}
+
+.profile-rating-line {
+  white-space: nowrap;
+}
+
+.review-rating-inline {
+  white-space: nowrap;
 }
 
 .profile-bio,
