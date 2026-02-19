@@ -44,12 +44,9 @@ export default async function ViewFreelancerPage({ params }) {
     `
   SELECT 
     r.*,
-    COALESCE(c.name, f.name) AS reviewer_name
+    c.name AS client_name
   FROM fm_reviews r
-  LEFT JOIN fm_clients c 
-    ON r.client_id = c.id
-  LEFT JOIN fm_freelancers f 
-    ON r.client_id = f.id
+  LEFT JOIN fm_clients c ON r.client_id = c.id
   WHERE r.freelancer_id = $1
   `,
     [id],
