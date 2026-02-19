@@ -37,10 +37,11 @@ export default async function JobsId({ params }) {
   );
   // console.log({id});
   // console.log({expenseRows});
-  const expenses = [];
-  for (let i = 0; i < expenseRows.length; i++) {
-    expenses.push(expenseRows[i].price);
-  }
+  const expenses = expenseRows.map((expense) => ({
+    name: expense.name,
+    price: expense.price,
+  }));
+
   // console.log(expenses);
 
   let { rows: jobDetails } = await db.query(
