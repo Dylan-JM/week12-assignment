@@ -469,7 +469,7 @@ export default async function FreelancerProfilePage({ params }) {
                   {freelancerDetails[0]?.links?.length > 0 ? (
                     freelancerDetails[0].links.map((link, index) => (
                       <li key={index} className="profile-link-item">
-                        <a href={link} target="_blank">
+                        <a href={link} target="_blank" rel="noopener noreferrer">
                           {link}
                         </a>
                         {isOwner && (

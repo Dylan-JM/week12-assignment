@@ -1301,6 +1301,20 @@ ul {
   text-align: center;
 }
 
+/* Vertical list for profile links (client view and freelancer profile) */
+.profile-links {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  list-style-position: inside;
+  padding-left: 1.5rem;
+}
+
+.profile-links li {
+  display: list-item;
+}
+
 /* ----------------------------------------- Jobs In Progress ------------------------------------------ */
 
 .jobs-in-progress-title {
