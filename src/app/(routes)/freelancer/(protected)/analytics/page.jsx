@@ -70,7 +70,7 @@ export default async function FreelancerAnalyticsPage() {
   return (
     <div className="sidebar-main-container">
       <FreelancerSideBar />
-      <div>
+      <div className="chart-container">
         <AnalyticsClient id={id} income={income} expenses={expenses} />
       </div>
     </div>

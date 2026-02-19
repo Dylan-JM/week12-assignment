@@ -1393,6 +1393,23 @@ ul {
   margin: 1rem;
 }
 
+.chart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  width: 100%;
+  flex-direction: column;
+}
+.chart-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  width: 100%;
+  flex-direction: column;
+}
+
 /* ----------------------------------------- Responsivness ------------------------------------------ */
 
 .hamburger {
@@ -1476,6 +1493,16 @@ ul {
     justify-content: center;
     align-items: center;
   }
+}
+
+@media (max-width: 400px) {
+  .contact-us-img {
+    width: 60%;
+    height: auto;
+  }
+}
+
+@media (max-width: 700px) {
   .sidebar-main-container {
     display: flex;
     flex-direction: column;
@@ -1484,12 +1511,10 @@ ul {
     justify-content: flex-start;
     align-content: flex-start;
   }
-}
-
-@media (max-width: 400px) {
-  .contact-us-img {
-    width: 60%;
-    height: auto;
+  .about-hero,
+  .about-content {
+    max-height: 300px;
+    overflow-y: auto;
   }
 }
 
@@ -1504,5 +1529,36 @@ ul {
   .chart {
     width: 100%;
     margin: 1rem 0 0 0;
+  }
+  .about-us-image {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .review-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    width: 100%;
+  }
+  .about-container {
+    margin: 1rem;
+    padding: 1rem;
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+  }
+  .about-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
   }
 }
