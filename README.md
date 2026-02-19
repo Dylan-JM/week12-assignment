@@ -248,6 +248,125 @@ http://localhost:3000
 
 ---
 
+# SQL Queries
+
+```
+CREATE TABLE fm_users (
+    clerk_id TEXT PRIMARY KEY,
+    role TEXT NOT NULL CHECK (role IN ('client', 'freelancer')),
+    created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+```
+CREATE TABLE fm_clients (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    clerk_id TEXT NOT NULL REFERENCES fm_users(clerk_id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    bio TEXT
+);
+```
+
+```
+CREATE TABLE fm_freelancers (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    clerk_id TEXT NOT NULL REFERENCES fm_users(clerk_id) ON DELETE CASCADE,
+    subscription TEXT NOT NULL DEFAULT 'free',
+    name TEXT NOT NULL,
+    bio TEXT,
+    hourly_rate NUMERIC,
+    skills JSONB,
+    links JSONB,
+    job_requests_left INT DEFAULT 0
+);
+```
+
+```
+CREATE TABLE fm_jobs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    client_id UUID NOT NULL REFERENCES fm_clients(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    budget NUMERIC,
+    deadline DATE,
+    category TEXT,
+    skills_required JSONB,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+```
+CREATE TABLE fm_contracts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    job_id UUID NOT NULL REFERENCES fm_jobs(id) ON DELETE CASCADE,
+    client_id UUID NOT NULL REFERENCES fm_clients(id) ON DELETE CASCADE,
+    freelancer_id UUID NOT NULL REFERENCES fm_freelancers(id) ON DELETE CASCADE,
+    start_date DATE,
+    end_date DATE,
+    status TEXT NOT NULL DEFAULT 'active'
+);
+```
+
+```
+CREATE TABLE fm_users (
+    clerk_id TEXT PRIMARY KEY,
+    role TEXT NOT NULL CHECK (role IN ('client', 'freelancer')),
+    created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+```
+CREATE TABLE fm_clients (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    clerk_id TEXT NOT NULL REFERENCES fm_users(clerk_id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    bio TEXT
+);
+```
+
+```
+CREATE TABLE fm_freelancers (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    clerk_id TEXT NOT NULL REFERENCES fm_users(clerk_id) ON DELETE CASCADE,
+    subscription TEXT NOT NULL DEFAULT 'free',
+    name TEXT NOT NULL,
+    bio TEXT,
+    hourly_rate NUMERIC,
+    skills JSONB,
+    links JSONB,
+    job_requests_left INT DEFAULT 0
+);
+```
+
+```
+CREATE TABLE fm_jobs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    client_id UUID NOT NULL REFERENCES fm_clients(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    budget NUMERIC,
+    deadline DATE,
+    category TEXT,
+    skills_required JSONB,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+```
+CREATE TABLE fm_contracts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    job_id UUID NOT NULL REFERENCES fm_jobs(id) ON DELETE CASCADE,
+    client_id UUID NOT NULL REFERENCES fm_clients(id) ON DELETE CASCADE,
+    freelancer_id UUID NOT NULL REFERENCES fm_freelancers(id) ON DELETE CASCADE,
+    start_date DATE,
+    end_date DATE,
+    status TEXT NOT NULL DEFAULT 'active'
+);
+
+```
+
+---
+
 # Subscription System
 
 Freelancers can upgrade to a premium subscription which includes:
@@ -332,6 +451,14 @@ Clerk handles:
 - Middleman/Escrow Payments
 - Dispute system
 - Email notification system
+- Chat - Read Receipts
+- Chat - Typing Indicators
+- Chat - Online/offline Presence
+- Chat - Edit Messages
+- Chat - Message Notifications
+- Chat - Delete Messages
+- Bookmark Jobs
+- Job Alerts
 
 ---
 
@@ -345,10 +472,13 @@ Add your contact details here.
 
 <!-- MARKDOWN LINKS & IMAGES -->
 
+## Database Schema
+
+![alt text](image-2.png)
+
 ## Light House Scores
 
 <img width="677" height="852" alt="Screenshot 2026-02-19 100029" src="https://github.com/user-attachments/assets/c8ad8000-3ee4-4f36-b968-646d73148720" />
-
 
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Next-url]: https://nextjs.org/
