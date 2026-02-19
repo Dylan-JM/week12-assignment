@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/dbConnection";
 import AnalyticsClient from "@/components/AnalyticsClient";
 import FreelancerSideBar from "@/components/FreelancerSideBar";
+import UpgradePlanCard from "@/components/UpgradePlanCard";
 
 export const metadata = {
   title: "Analytics",
@@ -10,7 +11,16 @@ export const metadata = {
 };
 
 export default async function FreelancerAnalyticsPage() {
-  const { userId } = await auth();
+  const { userId, has } = await auth();
+
+  if (!has({ feature: "full_analytics_suite" })) {
+    return (
+      <UpgradePlanCard
+        title="Upgrade to access Analytics"
+        description="The full analytics suite in the Pro plan. Upgrade your plan to view reports and insights."
+      />
+    );
+  }
 
   // Get id from fm_freelancers
   const { rows: id } = await db.query(

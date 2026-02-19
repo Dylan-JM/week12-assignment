@@ -1,7 +1,23 @@
 import JobsClient from "@/components/JobsClient";
+import UpgradePlanCard from "@/components/UpgradePlanCard";
 import { db } from "@/lib/dbConnection";
+import { auth } from "@clerk/nextjs/server";
 
 export default async function JobsId({ params }) {
+  const { has } = await auth();
+  const hasAccess =
+    has({ feature: "basic_analytics" }) ||
+    has({ feature: "full_analytics_suite" });
+
+  if (!hasAccess) {
+    return (
+      <UpgradePlanCard
+        title="Upgrade to view job details"
+        description="This page is available on the Advanced or Pro plan. Upgrade to track income and expenses for your jobs."
+      />
+    );
+  }
+
   const { id } = await params;
   let { rows: incomeRows } = await db.query(
     `SELECT * FROM fm_income WHERE job_id = $1`,
