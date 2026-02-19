@@ -462,6 +462,15 @@ Clerk handles:
 
 ---
 
+# Reflections
+
+- Most difficult part was the Ably Chat feature. Documentation was mixed and it took looking through a lot of different examples to get something working in the first place. After that it was a little easier making it how we wanted.
+- The jobs/[id] page was quite educational. It incorporated many elements of a full stack next.js website into one page, needing 1 serving page, and 2 client pages along with database calls and a chart.
+- Learning to store files in buckets through supabase buckets was educational and useful as it opens a lot of possibilities for file-sharing. This also took a while to implement it working with the chat feature.
+
+
+---
+
 # Contact
 
 Add your contact details here.
