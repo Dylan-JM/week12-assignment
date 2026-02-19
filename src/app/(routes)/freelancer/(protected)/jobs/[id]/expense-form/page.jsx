@@ -14,40 +14,49 @@ export default async function ExpenseForm({ params }) {
 
     console.log(formValues);
 
-    try {
-      await db.query(
-        `INSERT INTO fm_expenses (name, price, job_id) VALUES ($1, $2, $3)`,
-        [formValues.name, formValues.price, id],
-      );
-    } catch (e) {
-      console.log(e);
-    }
+    await db.query(
+      `INSERT INTO fm_expenses (name, price, job_id) VALUES ($1, $2, $3)`,
+      [formValues.name, formValues.price, id],
+    );
+
     revalidatePath("..");
     redirect("..");
   }
 
   return (
-    <div>
-      <h2>Expenses form</h2>
-      <form className="form" action={handleFormSubmit}>
-        <label className="form-name" htmlFor="name">
-          Name:{" "}
-        </label>
-        <input id="form-name" type="text" name="name" placeholder="Name" />
-
-        <label className="form-price" htmlFor="price">
-          Blog post:{" "}
-        </label>
-        <input
-          id="form-price"
-          type="number"
-          step="0.01"
-          name="price"
-          placeholder="Price"
-        />
-
-        <button>Submit</button>
-      </form>
+    <div className="expense-form-wrapper">
+      <div className="expense-form-card">
+        <h2 className="expense-form-title">Add expense</h2>
+        <form className="expense-form" action={handleFormSubmit}>
+          <div className="client-job-form-group">
+            <label className="checkbox-label" htmlFor="expense-name">
+              Name
+            </label>
+            <input
+              id="expense-name"
+              type="text"
+              name="name"
+              placeholder="e.g. Software licence"
+            />
+          </div>
+          <div className="client-job-form-group">
+            <label className="checkbox-label" htmlFor="expense-price">
+              Price (£)
+            </label>
+            <input
+              id="expense-price"
+              type="number"
+              step="0.01"
+              min="0"
+              name="price"
+              placeholder="0.00"
+            />
+          </div>
+          <button type="submit" className="submit-btn">
+            Submit
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

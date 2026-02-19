@@ -22,27 +22,39 @@ export default async function IncomeForm({ params }) {
   }
 
   return (
-    <div>
-      <h2>Income Form</h2>
-      <form className="form" action={handleFormSubmit}>
-        <label className="form-name" htmlFor="name">
-          Name:{" "}
-        </label>
-        <input id="form-name" type="text" name="name" placeholder="Name" />
-
-        <label className="form-amount" htmlFor="amount">
-          Blog post:{" "}
-        </label>
-        <input
-          id="form-amount"
-          type="number"
-          step="0.01"
-          name="amount"
-          placeholder="Amount"
-        />
-
-        <button>Submit</button>
-      </form>
+    <div className="expense-form-wrapper">
+      <div className="expense-form-card">
+        <h2 className="expense-form-title">Add income</h2>
+        <form className="expense-form" action={handleFormSubmit}>
+          <div className="client-job-form-group">
+            <label className="checkbox-label" htmlFor="income-name">
+              Name
+            </label>
+            <input
+              id="income-name"
+              type="text"
+              name="name"
+              placeholder="e.g. Client payment"
+            />
+          </div>
+          <div className="client-job-form-group">
+            <label className="checkbox-label" htmlFor="income-amount">
+              Amount (£)
+            </label>
+            <input
+              id="income-amount"
+              type="number"
+              step="0.01"
+              min="0"
+              name="amount"
+              placeholder="0.00"
+            />
+          </div>
+          <button type="submit" className="submit-btn">
+            Submit
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

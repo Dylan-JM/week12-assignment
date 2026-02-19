@@ -22,7 +22,7 @@ export default function ContactForm() {
   }
 
   return (
-    <div>
+    <div className="contact-form-wrapper">
       <form className="form feature-card" action={handleFormSubmit}>
         <label className="form-email" htmlFor="email">
           Email:{" "}

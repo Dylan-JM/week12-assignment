@@ -1,6 +1,6 @@
 import { db } from "@/lib/dbConnection";
 import { auth } from "@clerk/nextjs/server";
-import { Coins, Gem } from "lucide-react";
+import { Coins, Gem, Calendar, Clock, Briefcase } from "lucide-react";
 import ProposalForm from "@/components/proposal-form";
 
 function getJobTier(budget) {
@@ -37,8 +37,7 @@ export default async function SpecificJobPage({ params }) {
   }
 
   return (
-    <>
-      <h1>Job Page</h1>
+    <div className="all-client-jobs-container">
       {jobDetails.map((job) => {
         const tier = getJobTier(job.budget);
         const userTier = has({ plan: "pro" })
@@ -58,8 +57,23 @@ export default async function SpecificJobPage({ params }) {
               ? "Advanced"
               : null
           : null;
+        const skills = Array.isArray(job.skills_required)
+          ? job.skills_required
+          : typeof job.skills_required === "string"
+            ? (() => {
+                try {
+                  const parsed = JSON.parse(job.skills_required);
+                  return Array.isArray(parsed) ? parsed : [job.skills_required];
+                } catch {
+                  return [job.skills_required];
+                }
+              })()
+            : [];
         return (
-          <div key={job.id} className="relative rounded-lg border p-6">
+          <div
+            key={job.id}
+            className={`client-job-container relative freelancer-job-detail freelancer-job-detail--${tier}`}
+          >
             {tier === "advanced" && (
               <div className="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-amber-100 px-2 py-1 text-amber-800">
                 <Coins className="h-5 w-5" />
@@ -72,22 +86,49 @@ export default async function SpecificJobPage({ params }) {
                 <span className="text-sm font-medium">Premium</span>
               </div>
             )}
-            <h1 className="specific-job-title pr-32">{job.title}</h1>
-            <p className="column-info">{job.description}</p>
-            <p className="column-info">{job.budget}</p>
-            <p className="column-info">
-              {job.deadline
-                ? new Date(job.deadline).toLocaleDateString()
-                : "No deadline"}
-            </p>
-            {job.created_at && (
-              <p className="column-info">
-                Posted: {new Date(job.created_at).toLocaleDateString()}
+            <h1 className="job-title job-detail-title">{job.title}</h1>
+            <div className="editable-job-field m-2 text-xl job-description">
+              <strong>Description:</strong> {job.description || "—"}
+            </div>
+            <div className="freelancer-job-meta">
+              <p className="job-budget freelancer-job-meta-item">
+                £{Number(job.budget).toFixed(2)}
               </p>
+              <div className="editable-job-field m-2 text-xl freelancer-job-meta-item">
+                <Calendar className="freelancer-job-meta-icon" aria-hidden />
+                <strong>Deadline:</strong>{" "}
+                {job.deadline
+                  ? new Date(job.deadline).toLocaleDateString()
+                  : "No deadline"}
+              </div>
+              {job.created_at && (
+                <div className="editable-job-field m-2 text-xl freelancer-job-meta-item">
+                  <Clock className="freelancer-job-meta-icon" aria-hidden />
+                  <strong>Posted:</strong>{" "}
+                  {new Date(job.created_at).toLocaleDateString()}
+                </div>
+              )}
+            </div>
+            {job.category && (
+              <span className="job-category freelancer-job-category">
+                <Briefcase className="freelancer-job-category-icon" aria-hidden />
+                {job.category}
+              </span>
             )}
-            <p className="column-info">{job.category}</p>
-            <p className="column-info">{job.skills_required}</p>
-            <p>${Number(job.budget).toFixed(2)}</p>
+            {skills.length > 0 && (
+              <div className="editable-job-skills m-2 text-xl">
+                <h2 className="job-skills-required-title">
+                  <strong>Skills Required:</strong>
+                </h2>
+                <ul>
+                  {skills.map((skill, index) => (
+                    <li key={index} className="job-skill">
+                      {skill}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
             <div className="mt-4">
               <ProposalForm
                 jobId={job.id}
@@ -99,6 +140,6 @@ export default async function SpecificJobPage({ params }) {
           </div>
         );
       })}
-    </>
+    </div>
   );
 }
