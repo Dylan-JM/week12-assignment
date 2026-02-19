@@ -13,6 +13,7 @@ export default function Contact() {
         <img
           src="https://media.istockphoto.com/id/1412531992/vector/contact-us-banner-speech-bubble-label-sticker-ribbon-template-vector-stock-illustration.jpg?s=612x612&w=0&k=20&c=YYZr8DA0KbCiTTGr43HDWNqVGnhTuLAr8J3MFDncsRE="
           className="contact-us-img"
+          alt="contact-us-image"
         />
         <div className="contact-cards-wrapper">
           <p className="feature-card">

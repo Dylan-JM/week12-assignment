@@ -14,6 +14,7 @@ export default function PricingPage() {
           <img
             src="https://thumbs.dreamstime.com/b/subscription-sticker-sign-transparent-background-rectangular-button-360704912.jpg"
             className="plans-img"
+            alt="subscription-plans-image"
           />
           <PricingTable />
         </div>
