@@ -114,49 +114,51 @@ export default function FreelancersList({ freelancers }) {
                   <span className="text-sm font-medium">Premium</span>
                 </div>
               )}
-              <Link
-                href={`/client/findFreelancers/${freelancer.id}`}
-                key={freelancer.id}
-              >
-                <h1 className="job-title pr-32">{freelancer.name}</h1>
-
-                <p className="profile-bio">{freelancer.bio}</p>
-                <h2>
-                  <strong>Skills:</strong>
-                </h2>
-                <ul>
-                  {freelancer.skills.map((skill, index) => (
-                    <li className="job-skill" key={index}>
-                      {skill}
-                    </li>
-                  ))}
-                </ul>
-              </Link>
-              <button
-                type="button"
-                onClick={() => handleMessage(freelancer)}
-                disabled={
-                  !user ||
-                  !freelancer.clerk_id ||
-                  messageLoadingId === freelancer.id
-                }
-                className="find-freelancer-message-btn"
-              >
-                {messageLoadingId === freelancer.id ? "Opening…" : "Message"}
-              </button>
-              <ol className="profile-links">
-                {freelancer.links?.length > 0 ? (
-                  freelancer.links.map((link, index) => (
-                    <li key={index}>
-                      <a href={link} target="_blank" rel="noopener noreferrer">
-                        {link}
-                      </a>
-                    </li>
-                  ))
-                ) : (
-                  <li>No links added yet.</li>
-                )}
-              </ol>
+              <div className="freelancer-card-content">
+                <Link
+                  href={`/client/findFreelancers/${freelancer.id}`}
+                  key={freelancer.id}
+                  className="freelancer-card-link"
+                >
+                  <h1 className="job-title freelancer-card-title">{freelancer.name}</h1>
+                  <p className="profile-bio">{freelancer.bio}</p>
+                  <h2 className="freelancer-card-heading">
+                    <strong>Skills:</strong>
+                  </h2>
+                  <ul className="freelancer-card-skills">
+                    {freelancer.skills.map((skill, index) => (
+                      <li className="job-skill" key={index}>
+                        {skill}
+                      </li>
+                    ))}
+                  </ul>
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => handleMessage(freelancer)}
+                  disabled={
+                    !user ||
+                    !freelancer.clerk_id ||
+                    messageLoadingId === freelancer.id
+                  }
+                  className="find-freelancer-message-btn"
+                >
+                  {messageLoadingId === freelancer.id ? "Opening…" : "Message"}
+                </button>
+                <ol className="profile-links">
+                  {freelancer.links?.length > 0 ? (
+                    freelancer.links.map((link, index) => (
+                      <li key={index}>
+                        <a href={link} target="_blank" rel="noopener noreferrer">
+                          {link}
+                        </a>
+                      </li>
+                    ))
+                  ) : (
+                    <li>No links added yet.</li>
+                  )}
+                </ol>
+              </div>
             </div>
           );
         })}

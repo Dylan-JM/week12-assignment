@@ -1146,6 +1146,64 @@ ul {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* Freelancer cards: vertical stack, centred content */
+.all-client-jobs-container .client-job-container {
+  align-items: center;
+  text-align: center;
+}
+
+.freelancer-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+}
+
+.freelancer-card-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.freelancer-card-link .job-title.freelancer-card-title {
+  margin-top: 0;
+  text-align: center;
+  padding-left: 8rem;
+  padding-right: 8rem;
+}
+
+.freelancer-card-link .profile-bio {
+  margin: 0.5rem 0 1rem 0;
+  text-align: center;
+}
+
+.freelancer-card-heading {
+  font-size: 1rem;
+  margin: 0 0 0.5rem 0;
+  text-align: center;
+}
+
+.freelancer-card-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+  justify-content: center;
+}
+
+.freelancer-card-content .profile-links {
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
 /* ----------------------------------------- Jobs In Progress ------------------------------------------ */
 
 .jobs-in-progress-title {
