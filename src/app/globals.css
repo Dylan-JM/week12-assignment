@@ -1366,6 +1366,33 @@ ul {
   color: #0070f3;
 }
 
+/* ----------------------------------------- Add income/expense ------------------------------------------ */
+
+.add-expense-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.add-income-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.chart {
+  width: 70%;
+  margin: 1rem;
+}
+
 /* ----------------------------------------- Responsivness ------------------------------------------ */
 
 .hamburger {
@@ -1466,3 +1493,16 @@ ul {
   }
 }
 
+@media (max-width: 850px) {
+  .income-expense-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+  }
+  .chart {
+    width: 100%;
+    margin: 1rem 0 0 0;
+  }
+}
