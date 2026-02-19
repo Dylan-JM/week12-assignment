@@ -4,7 +4,7 @@ import JobsChart from "./JobsChart";
 import Link from "next/link";
 
 export default function JobsClient({ id, income, expenses, jobDetails }) {
-  console.log(expenses);
+  //console.log(expenses);
   return (
     <div className="flex flex-col gap-2 analytics-contents">
       <section className="flex flex-col feature-card-container">

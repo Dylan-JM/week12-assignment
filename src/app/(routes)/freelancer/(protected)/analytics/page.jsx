@@ -49,7 +49,7 @@ export default async function FreelancerAnalyticsPage() {
   expensesArr.forEach((price) => {
     expenses.push(price.price);
   });
-  console.log(expenses);
+  //console.log(expenses);
   // for each job_id, get amount from fm_income
   let { rows: incomeArr } = await db.query(
     "SELECT amount FROM fm_income WHERE job_id = ANY($1)",

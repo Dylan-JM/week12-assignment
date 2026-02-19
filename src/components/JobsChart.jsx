@@ -7,6 +7,11 @@ export default function JobsChart({ id, income, expenses }) {
   const chartRef = useRef(null);
   const chartInstanceRef = useRef(null);
 
+  const expense = [];
+  for (let i = 0; i < expenses.length ; i++){
+    expense.push(expenses[i].price);
+  }
+
   useEffect(() => {
     const ctx = chartRef.current?.getContext("2d");
     if (!ctx) return;
@@ -17,15 +22,12 @@ export default function JobsChart({ id, income, expenses }) {
       x: index + 1,
       y: value,
     }));
-    const expenseNums = expenses.map(Number);
+    const expenseNums = expense.map(Number);
     expenseNums.reverse();
     const expenseData = expenseNums.map((value, index) => ({
       x: index + 1,
       y: value,
     }));
-
-    //   console.log("income:", incomeNums);
-    //   console.log("expenses:", expenseNums);
 
     if (chartInstanceRef.current) {
       chartInstanceRef.current.destroy();
