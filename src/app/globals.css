@@ -104,6 +104,14 @@ body {
   padding: 2rem;
 }
 
+.home-page-subtitle {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  letter-spacing: -0.5px;
+  text-align: center;
+}
+
 .homepage-title {
   font-size: 3rem;
   font-weight: 700;

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import TextAnimation from "@/components/EnterAnimation";
 
 export const metadata = {
   title: "Client Dashboard",
@@ -44,18 +45,20 @@ export default function clientDashboardPage() {
     <>
       <h1 className="tracker-title">Client Portal</h1>
       <div className="main-features-container">
-        <section className="features-grid">
-          {features.map((feature) => (
-            <Link
-              key={feature.title}
-              href={feature.href}
-              className="feature-card"
-            >
-              <h3 className="feature-title">{feature.title}</h3>
-              <p className="feature-desc">{feature.desc}</p>
-            </Link>
-          ))}
-        </section>
+        <TextAnimation>
+          <section className="features-grid">
+            {features.map((feature) => (
+              <Link
+                key={feature.title}
+                href={feature.href}
+                className="feature-card"
+              >
+                <h3 className="feature-title">{feature.title}</h3>
+                <p className="feature-desc">{feature.desc}</p>
+              </Link>
+            ))}
+          </section>
+        </TextAnimation>
       </div>
     </>
   );
